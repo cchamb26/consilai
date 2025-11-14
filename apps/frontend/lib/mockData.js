@@ -57,35 +57,6 @@ export const mockStudents = [
   },
 ];
 
-export const mockResearchInsights = [
-  {
-    id: '1',
-    title: 'The Impact of Peer Support on Student Performance',
-    fileName: 'peer-support-study.pdf',
-    uploadDate: '2024-11-10',
-    summary: 'Research shows that peer support networks increase academic performance by 23% on average.',
-    relevantTopics: ['Collaboration', 'Social Learning', 'Student Engagement'],
-    keyFindings: [
-      'Peer mentoring improves retention rates',
-      'Group study sessions boost comprehension',
-      'Collaborative learning builds confidence',
-    ],
-  },
-  {
-    id: '2',
-    title: 'Adaptive Learning Strategies for Diverse Learners',
-    fileName: 'adaptive-learning.pdf',
-    uploadDate: '2024-11-08',
-    summary: 'Personalized learning approaches show 35% improvement in student outcomes.',
-    relevantTopics: ['Differentiation', 'Personalization', 'Learning Styles'],
-    keyFindings: [
-      'Multi-modal instruction benefits all learners',
-      'Real-time feedback improves engagement',
-      'Flexible pacing reduces anxiety',
-    ],
-  },
-];
-
 export const mockPlans = [
   {
     id: '1',

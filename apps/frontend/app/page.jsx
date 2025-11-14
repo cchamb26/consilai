@@ -21,19 +21,39 @@ export default function Home() {
     },
     {
       id: 3,
-      title: 'Research Papers',
-      description: 'Upload and analyze research papers with AI insights',
-      icon: '📚',
-      href: '/research',
-      color: 'from-green-400 to-green-600',
-    },
-    {
-      id: 4,
       title: 'AI Plan Generator',
-      description: 'Generate personalized learning plans powered by AI',
+      description: 'Generate personalized learning plans backed by leading educational research',
       icon: '🤖',
       href: '/plans',
       color: 'from-yellow-400 to-yellow-600',
+    },
+  ];
+
+  const workflowSteps = [
+    {
+      number: '1',
+      title: 'Profile Students',
+      description: 'Capture each student’s issues, goals, and strengths in the UI.',
+    },
+    {
+      number: '2',
+      title: 'Auto Keyword Extraction',
+      description: 'The backend transforms student details into smart research search terms.',
+    },
+    {
+      number: '3',
+      title: 'Background Research Scrape',
+      description: 'Scrapers quietly gather current evidence—no uploads required from teachers.',
+    },
+    {
+      number: '4',
+      title: 'AI Summaries',
+      description: 'Backend services condense the research corpus into actionable insights.',
+    },
+    {
+      number: '5',
+      title: 'Plan Generator',
+      description: 'Teachers view the finalized, research-backed plan directly in the UI.',
     },
   ];
 
@@ -49,7 +69,7 @@ export default function Home() {
             AI-Powered Teacher Assistant for Student Support & Classroom Management
           </p>
           <p className="text-gray-600 max-w-2xl mx-auto mb-12">
-            Analyze research papers, manage student profiles, simulate classroom seating, and generate personalized learning plans—all in one platform.
+            Manage student profiles, simulate classrooms, and deliver research-backed learning plans—our backend handles every research scrape and summary automatically.
           </p>
           <Link href="/students">
             <Button variant="primary" size="lg">
@@ -63,7 +83,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Core Features</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature) => (
             <Link key={feature.id} href={feature.href}>
               <div className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 cursor-pointer h-full">
@@ -88,10 +108,15 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">How It Works</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Step number="1" title="Add Students" description="Create student profiles with issues, strengths, and goals" />
-            <Step number="2" title="Upload Research" description="Analyze educational research papers with AI" />
-            <Step number="3" title="Generate Plans" description="AI creates personalized learning plans based on insights" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+            {workflowSteps.map(step => (
+              <Step
+                key={step.number}
+                number={step.number}
+                title={step.title}
+                description={step.description}
+              />
+            ))}
           </div>
 
           <div className="mt-16 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8 border-2 border-blue-200">
