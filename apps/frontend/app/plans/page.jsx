@@ -2,14 +2,12 @@
 
 import { useState } from 'react';
 import Button from '../../components/Button';
-import Input from '../../components/Input';
 import Textarea from '../../components/Textarea';
 import PlanResultCard from '../../components/PlanResultCard';
 import { mockStudents, mockPlans } from '../../lib/mockData';
 
 export default function PlansPage() {
   const [selectedStudent, setSelectedStudent] = useState('');
-  const [selectedResearch, setSelectedResearch] = useState('');
   const [customPrompt, setCustomPrompt] = useState('');
   const [generatedPlan, setGeneratedPlan] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -30,7 +28,7 @@ export default function PlansPage() {
         id: Date.now(),
         studentId: selectedStudent,
         title: 'Personalized Learning Plan',
-        objectives: `This plan focuses on developing ${student.strengths[0]} while addressing ${student.issues[0]}. The curriculum will integrate research findings and personalized learning strategies tailored to ${student.name}'s unique profile.`,
+        objectives: `This plan focuses on developing ${student.strengths[0]} while addressing ${student.issues[0]}. The curriculum automatically incorporates backend research summaries and personalized strategies tailored to ${student.name}'s unique profile.`,
         startDate: new Date().toISOString().split('T')[0],
         endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'Generated',
@@ -55,7 +53,7 @@ export default function PlansPage() {
         <div className="mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">🤖 AI Plan Generator</h1>
           <p className="text-gray-600 text-lg">
-            Generate personalized learning plans powered by AI and research insights
+            Generate personalized learning plans powered by AI and backend-curated research—no uploads or manual inputs needed.
           </p>
         </div>
 
@@ -63,7 +61,10 @@ export default function PlansPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left: Form */}
           <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Plan Parameters</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Plan Parameters</h2>
+            <p className="text-sm text-gray-500 mb-6">
+              After you complete a student profile, ConsilAI automatically extracts key terms, scrapes relevant research, and summarizes findings in the backend. Select a student below and optionally add any extra instructions.
+            </p>
 
             <div className="space-y-6">
               {/* Student Selection */}
@@ -82,22 +83,6 @@ export default function PlansPage() {
                       {student.name} - {student.grade}
                     </option>
                   ))}
-                </select>
-              </div>
-
-              {/* Research Selection */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Use Research Insights
-                </label>
-                <select
-                  value={selectedResearch}
-                  onChange={(e) => setSelectedResearch(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">None - Use AI only</option>
-                  <option value="1">The Impact of Peer Support...</option>
-                  <option value="2">Adaptive Learning Strategies...</option>
                 </select>
               </div>
 
@@ -126,7 +111,7 @@ export default function PlansPage() {
                 <p className="font-semibold text-blue-900 text-sm mb-2">💡 Tips:</p>
                 <ul className="text-xs text-blue-800 space-y-1">
                   <li>• AI considers student issues, strengths, and goals</li>
-                  <li>• Research insights inform evidence-based strategies</li>
+                  <li>• Backend research scraping runs automatically per student</li>
                   <li>• Plans are 90 days with weekly milestones</li>
                 </ul>
               </div>

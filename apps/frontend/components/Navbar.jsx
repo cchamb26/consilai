@@ -21,7 +21,6 @@ export default function Navbar() {
             <NavLink href="/">Home</NavLink>
             <NavLink href="/students">Students</NavLink>
             <NavLink href="/classroom">Classroom</NavLink>
-            <NavLink href="/research">Research</NavLink>
             <NavLink href="/plans">Plans</NavLink>
           </div>
 
@@ -42,7 +41,6 @@ export default function Navbar() {
             <MobileNavLink href="/">Home</MobileNavLink>
             <MobileNavLink href="/students">Students</MobileNavLink>
             <MobileNavLink href="/classroom">Classroom</MobileNavLink>
-            <MobileNavLink href="/research">Research</MobileNavLink>
             <MobileNavLink href="/plans">Plans</MobileNavLink>
           </div>
         )}
