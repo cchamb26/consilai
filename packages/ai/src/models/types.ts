@@ -9,10 +9,22 @@ export type StudentProfile = {
 };
 
 export type KeywordSet = {
-  topics: string[];
-  skills: string[];
-  behaviors: string[];
-  constraints: string[];
+  /**
+   * Base + expanded keywords related to the student's profile.
+   * Includes seed terms (e.g. "dyslexia", "ADHD") and deterministic expansions
+   * like symptom phrases, synonyms, and related educational terms.
+   */
+  expandedKeywords: string[];
+  /**
+   * Concrete phrases that were actually found in the student's text
+   * (issues, goals, context notes, etc.). These map back to seed issues.
+   */
+  matchedPatterns: string[];
+  /**
+   * Higher-level issue categories inferred from the student text,
+   * e.g. "dyslexia", "adhd", "anxiety", "executive_dysfunction", "esl_ell".
+   */
+  inferredIssues: string[];
 };
 
 export type ResearchSnippet = {
