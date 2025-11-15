@@ -112,4 +112,8 @@ temp/
 # Optional: Uncomment if you don't want to commit lock files
 # package-lock.json
 # yarn.lock
+<<<<<<< HEAD
 # pnpm-lock.yaml
+=======
+# pnpm-lock.yaml
+>>>>>>> fe30fb76123cb7732c5e98009d7537a17d77080e

@@ -1,0 +1,63 @@
+export type StudentProfile = {
+  id: string;
+  name: string;
+  grade: string;
+  issues: string[];
+  strengths: string[];
+  goals: string[];
+  contextNotes?: string;
+};
+
+export type KeywordSet = {
+  /**
+   * Base + expanded keywords related to the student's profile.
+   * Includes seed terms (e.g. "dyslexia", "ADHD") and deterministic expansions
+   * like symptom phrases, synonyms, and related educational terms.
+   */
+  expandedKeywords: string[];
+  /**
+   * Concrete phrases that were actually found in the student's text
+   * (issues, goals, context notes, etc.). These map back to seed issues.
+   */
+  matchedPatterns: string[];
+  /**
+   * Higher-level issue categories inferred from the student text,
+   * e.g. "dyslexia", "adhd", "anxiety", "executive_dysfunction", "esl_ell".
+   */
+  inferredIssues: string[];
+};
+
+export type ResearchSnippet = {
+  id: string;
+  title: string;
+  source: string;
+  url?: string;
+  abstract: string;
+  summary: string;
+  tags: string[];
+  relevanceScore?: number;
+};
+
+export type PlanWeekSegment = {
+  weekLabel: string; // e.g. "Weeks 1–2"
+  focus: string;
+  teacherActions: string[];
+  studentActions: string[];
+  checkIns: string[];
+};
+
+export type ShortTermPlan = {
+  studentId: string;
+  durationWeeks: 2 | 3;
+  overallGoal: string;
+  segments: PlanWeekSegment[];
+  notesForTeacher: string;
+};
+
+export type PlanGenerationInput = {
+  student: StudentProfile;
+  research: ResearchSnippet[];
+  durationWeeks: 2 | 3;
+};
+
+

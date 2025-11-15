@@ -4,6 +4,7 @@ import { useState } from 'react';
 import DeskGrid from '../../components/DeskGrid';
 import Button from '../../components/Button';
 import { mockDesks } from '../../lib/mockData';
+import { generateSeatingChart } from '../../lib/rbsbSeating';
 
 export default function ClassroomPage() {
   const [desks, setDesks] = useState(mockDesks);
@@ -16,6 +17,83 @@ export default function ClassroomPage() {
   const handleSave = () => {
     console.log('Saving seating arrangement:', desks);
     alert('Seating arrangement saved! (Demo mode)');
+  };
+
+  const handleAutoSort = () => {
+    const cols = 4;
+    const rows = Math.ceil(desks.length / cols);
+
+    // Derive simple scores from current students.
+    const seen = new Map();
+    for (const desk of desks) {
+      if (!desk.student) continue;
+      const s = desk.student;
+      if (seen.has(s.id)) continue;
+
+      const textIssues = (s.issues || []).join(' ').toLowerCase();
+      const textStrengths = (s.strengths || []).join(' ').toLowerCase();
+
+      let academicScore = 0.6;
+      let behaviorScore = 0.6;
+      let socialScore = 0.6;
+      let supportNeeds = 0;
+
+      if (textIssues.includes('reading') || textIssues.includes('math')) {
+        academicScore -= 0.2;
+      }
+      if (textIssues.includes('missing assignments') || textIssues.includes('poor')) {
+        academicScore -= 0.1;
+      }
+      if (textIssues.includes('disruptive') || textIssues.includes('behavior')) {
+        behaviorScore -= 0.25;
+      }
+      if (textIssues.includes('anxiety') || textIssues.includes('focus')) {
+        behaviorScore -= 0.15;
+      }
+      if (textIssues.includes('social') || textIssues.includes('peer')) {
+        socialScore -= 0.2;
+      }
+
+      if (textStrengths.includes('leadership') || textStrengths.includes('strong')) {
+        academicScore += 0.1;
+        behaviorScore += 0.1;
+      }
+      if (textStrengths.includes('collaborative') || textStrengths.includes('peer')) {
+        socialScore += 0.1;
+      }
+
+      supportNeeds = Math.min((s.issues || []).length * 0.15, 1);
+
+      const clamp = (v) => Math.max(0, Math.min(1, v));
+
+      seen.set(s.id, {
+        id: s.id,
+        academicScore: clamp(academicScore),
+        behaviorScore: clamp(behaviorScore),
+        socialScore: clamp(socialScore),
+        supportNeeds,
+        original: s,
+      });
+    }
+
+    const studentsForAlgo = Array.from(seen.values());
+    if (studentsForAlgo.length === 0) return;
+
+    const { seatMap } = generateSeatingChart(studentsForAlgo, rows, cols);
+
+    const newDesks = desks.map((desk, index) => {
+      const row = Math.floor(index / cols);
+      const col = index % cols;
+      const seat = seatMap[row]?.[col] || null;
+      const student = seat ? seat.original : null;
+      return {
+        ...desk,
+        student,
+        available: !student,
+      };
+    });
+
+    setDesks(newDesks);
   };
 
   return (
@@ -48,6 +126,9 @@ export default function ClassroomPage() {
             </Button>
             <Button variant="secondary" onClick={handleReset}>
               🔄 Reset to Default
+            </Button>
+            <Button variant="outline" onClick={handleAutoSort}>
+              🧠 Auto-sort Seats
             </Button>
             <Button variant="outline">
               📊 View Analytics
