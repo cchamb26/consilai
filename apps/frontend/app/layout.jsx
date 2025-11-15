@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
         </main>
         <footer className="bg-slate-950 border-t border-white/10 text-slate-500 py-8 mt-12">
           <div className="max-w-6xl mx-auto px-4 text-center">
-            <p className="text-sm tracking-wide uppercase">© 2067 ConsilAI</p>
+            <p className="text-sm tracking-wide uppercase">© 2025 ConsilAI</p>
           </div>
         </footer>
       </body>
