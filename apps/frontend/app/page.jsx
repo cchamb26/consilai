@@ -33,27 +33,17 @@ export default function Home() {
     {
       number: '01',
       title: 'Profile Students',
-      description: 'Issues, goals, strengths, context—captured in seconds.',
+      description: 'Capture the student’s challenges, strengths, and aspirations—this is the only manual step.',
     },
     {
       number: '02',
-      title: 'Machine Understanding',
-      description: 'Backend extracts linguistic signals and research keywords.',
+      title: 'Research Intelligence',
+      description: 'ConsilAI extracts signals, scrapes vetted research, and assembles evidence-backed strategies quietly in the background.',
     },
     {
       number: '03',
-      title: 'Silent Research',
-      description: 'Scrapers collect the latest, high-signal academic findings.',
-    },
-    {
-      number: '04',
-      title: 'AI Summaries',
-      description: 'Insights condensed into evidence-backed recommendations.',
-    },
-    {
-      number: '05',
       title: 'Plan Delivery',
-      description: 'You see a polished plan—no uploads, no extra steps.',
+      description: 'You receive a polished, ready-to-use learning plan with zero extra clicks or uploads.',
     },
   ];
 
@@ -111,11 +101,11 @@ export default function Home() {
             <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Flow</p>
             <h2 className="text-3xl font-semibold">Research stays hidden. The experience stays effortless.</h2>
             <p className="text-slate-400 max-w-3xl">
-              ConsilAI mirrors the best AI tools: minimal UI, maximal intelligence. Every plan is powered by quiet automation you never have to manage.
+               Every plan is powered by quiet automation you never have to manage.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {workflowSteps.map(step => (
               <Step
                 key={step.number}
@@ -158,7 +148,7 @@ export default function Home() {
 
 function Step({ number, title, description }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 h-full flex flex-col gap-3">
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 h-full flex flex-col items-center text-center gap-3">
       <span className="text-xs uppercase tracking-[0.4em] text-slate-500">{number}</span>
       <h4 className="text-lg font-semibold text-white">{title}</h4>
       <p className="text-sm text-slate-400">{description}</p>
