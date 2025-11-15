@@ -12,7 +12,27 @@ export async function generateShortTermPlan(
   try {
     parsed = JSON.parse(raw);
   } catch (error) {
-    throw new Error("Failed to parse LLM plan JSON");
+    // Fallback: try to extract the JSON object from within extra text.
+    const firstBrace = raw.indexOf("{");
+    const lastBrace = raw.lastIndexOf("}");
+
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      const candidate = raw.slice(firstBrace, lastBrace + 1);
+      try {
+        parsed = JSON.parse(candidate);
+      } catch (innerError) {
+        // eslint-disable-next-line no-console
+        console.error(
+          "[ai] Failed to parse LLM plan JSON. Raw output:",
+          raw,
+        );
+        throw new Error("Failed to parse LLM plan JSON");
+      }
+    } else {
+      // eslint-disable-next-line no-console
+      console.error("[ai] No JSON object found in LLM output:", raw);
+      throw new Error("Failed to parse LLM plan JSON");
+    }
   }
 
   return {
