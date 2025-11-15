@@ -1,5 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import Button from '../components/Button';
+import Greeting from '../components/Greeting';
+import { ProtectedRoute } from '../lib/ProtectedRoute';
 
 export default function Home() {
   const features = [
@@ -48,7 +52,11 @@ export default function Home() {
   ];
 
   return (
-    <div className="bg-slate-950 text-slate-100">
+    <ProtectedRoute>
+      <div className="bg-slate-950 text-slate-100">
+        {/* Greeting */}
+        <Greeting />
+
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="space-y-8">
@@ -143,6 +151,7 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </ProtectedRoute>
   );
 }
 
