@@ -6,6 +6,10 @@
 .env.production.local
 .env*.local
 
+# Google OAuth Credentials
+**/google oauth client_secret*.json
+**/client_secret*.json
+
 # Dependencies
 node_modules/
 **/node_modules/
