@@ -1,0 +1,14 @@
+{
+  "name": "@consilai/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:db": "node test-db.js",
+    "test:db:verbose": "node test-db.js --verbose"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.81.1"
+  }
+}
+
