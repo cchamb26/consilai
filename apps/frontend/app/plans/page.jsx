@@ -5,6 +5,7 @@ import Button from '../../components/Button';
 import Textarea from '../../components/Textarea';
 import PlanResultCard from '../../components/PlanResultCard';
 import { mockStudents, mockPlans } from '../../lib/mockData';
+import { ProtectedRoute } from '../../lib/ProtectedRoute';
 
 export default function PlansPage() {
   const [selectedStudent, setSelectedStudent] = useState('');
@@ -47,7 +48,8 @@ export default function PlansPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 py-16">
+    <ProtectedRoute>
+      <div className="min-h-screen bg-slate-950 py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 space-y-3">
@@ -172,7 +174,8 @@ export default function PlansPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }
 

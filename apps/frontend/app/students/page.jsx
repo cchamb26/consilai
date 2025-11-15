@@ -6,6 +6,7 @@ import StudentCard from '../../components/StudentCard';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { mockStudents } from '../../lib/mockData';
+import { ProtectedRoute } from '../../lib/ProtectedRoute';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState(mockStudents);
@@ -17,7 +18,8 @@ export default function StudentsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-950 py-16">
+    <ProtectedRoute>
+      <div className="min-h-screen bg-slate-950 py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Header */}
         <div className="mb-12">
@@ -63,7 +65,8 @@ export default function StudentsPage() {
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }
 

@@ -3,12 +3,14 @@
 import { useEffect } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import { signInWithGoogle } from '@/lib/auth';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Button from '@/components/Button';
 
 export default function Login() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirected = searchParams.get('redirected') === 'true';
 
   useEffect(() => {
     if (!loading && user) {
@@ -34,6 +36,12 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-slate-950">
       <div className="w-full max-w-md space-y-8 px-4">
+        {redirected && (
+          <div className="bg-red-500 text-white rounded-lg px-4 py-3 text-sm font-medium">
+            Please log in to access that page
+          </div>
+        )}
+        
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-slate-100">Welcome to ConsilAI</h1>
           <p className="text-slate-400">Sign in to your account to continue</p>

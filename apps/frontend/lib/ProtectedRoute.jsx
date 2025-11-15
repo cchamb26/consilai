@@ -9,9 +9,9 @@ export function ProtectedRoute({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    // If auth has loaded and there's no user, redirect to login
+    // If auth has loaded and there's no user, redirect to login with query param
     if (!loading && !user) {
-      router.push('/login');
+      router.push('/login?redirected=true');
     }
   }, [user, loading, router]);
 

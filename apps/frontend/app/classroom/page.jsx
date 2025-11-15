@@ -5,6 +5,7 @@ import DeskGrid from '../../components/DeskGrid';
 import Button from '../../components/Button';
 import { mockDesks } from '../../lib/mockData';
 import { generateSeatingChart } from '../../lib/rbsbSeating';
+import { ProtectedRoute } from '../../lib/ProtectedRoute';
 
 export default function ClassroomPage() {
   const [desks, setDesks] = useState(mockDesks);
@@ -97,7 +98,8 @@ export default function ClassroomPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 py-16">
+    <ProtectedRoute>
+      <div className="min-h-screen bg-slate-950 py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Header */}
         <div className="space-y-8">
@@ -150,7 +152,8 @@ export default function ClassroomPage() {
           <Tip icon="👥" title="Social Flow" description="Rotate seating to keep social dynamics fresh and inclusive." />
         </div>
       </div>
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }
 
