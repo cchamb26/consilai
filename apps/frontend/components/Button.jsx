@@ -5,14 +5,14 @@ export default function Button({
   className = '',
   ...props 
 }) {
-  const baseStyles = 'font-semibold rounded-lg transition-colors duration-200 cursor-pointer';
+  const baseStyles = 'font-semibold rounded-lg transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-slate-950';
   
   const variants = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
-    outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50',
-    danger: 'bg-red-600 text-white hover:bg-red-700',
-    success: 'bg-green-600 text-white hover:bg-green-700',
+    primary: 'bg-indigo-500 text-white hover:bg-indigo-400',
+    secondary: 'bg-slate-800 text-slate-100 hover:bg-slate-700',
+    outline: 'border-2 border-indigo-400 text-indigo-200 hover:bg-indigo-950/50',
+    danger: 'bg-rose-600 text-white hover:bg-rose-500',
+    success: 'bg-emerald-500 text-white hover:bg-emerald-400',
   };
 
   const sizes = {

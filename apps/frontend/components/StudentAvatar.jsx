@@ -11,11 +11,11 @@ export default function StudentAvatar({
   };
 
   return (
-    <div 
+    <div
       className={`
-        flex items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 
-        text-white font-semibold shadow-md
-        ${sizes[size]} 
+        flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400
+        text-white font-semibold shadow-lg shadow-indigo-900/50
+        ${sizes[size]}
         ${className}
       `}
       title={name}

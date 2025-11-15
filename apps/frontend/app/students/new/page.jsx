@@ -10,15 +10,15 @@ export default function NewStudentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-950 py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Breadcrumb */}
-        <div className="mb-8 flex items-center space-x-2 text-sm">
-          <Link href="/" className="text-blue-600 hover:underline">Home</Link>
-          <span className="text-gray-400">/</span>
-          <Link href="/students" className="text-blue-600 hover:underline">Students</Link>
-          <span className="text-gray-400">/</span>
-          <span className="text-gray-600">New Student</span>
+        <div className="flex items-center space-x-2 text-sm text-slate-500">
+          <Link href="/" className="hover:text-white transition">Home</Link>
+          <span>/</span>
+          <Link href="/students" className="hover:text-white transition">Students</Link>
+          <span>/</span>
+          <span className="text-slate-300">New</span>
         </div>
 
         <StudentForm onSubmit={handleSubmit} />

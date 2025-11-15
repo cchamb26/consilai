@@ -47,12 +47,13 @@ export default function PlansPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-950 py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">🤖 AI Plan Generator</h1>
-          <p className="text-gray-600 text-lg">
+        <div className="mb-12 space-y-3">
+          <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Plans</p>
+          <h1 className="text-4xl font-semibold text-white">🤖 AI Plan Generator</h1>
+          <p className="text-slate-400 text-lg">
             Generate personalized learning plans powered by AI and backend-curated research—no uploads or manual inputs needed.
           </p>
         </div>
@@ -60,22 +61,22 @@ export default function PlansPage() {
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left: Form */}
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Plan Parameters</h2>
-            <p className="text-sm text-gray-500 mb-6">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur">
+            <h2 className="text-2xl font-semibold text-white mb-2">Plan Parameters</h2>
+            <p className="text-sm text-slate-400 mb-6">
               After you complete a student profile, ConsilAI automatically extracts key terms, scrapes relevant research, and summarizes findings in the backend. Select a student below and optionally add any extra instructions.
             </p>
 
             <div className="space-y-6">
               {/* Student Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-slate-200 mb-2">
                   Select Student *
                 </label>
                 <select
                   value={selectedStudent}
                   onChange={(e) => setSelectedStudent(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-white/10 rounded-lg bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Choose a student...</option>
                   {mockStudents.map(student => (
@@ -107,9 +108,9 @@ export default function PlansPage() {
               </Button>
 
               {/* Tips */}
-              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-                <p className="font-semibold text-blue-900 text-sm mb-2">💡 Tips:</p>
-                <ul className="text-xs text-blue-800 space-y-1">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <p className="font-semibold text-white text-sm mb-2">💡 Tips</p>
+                <ul className="text-xs text-slate-400 space-y-1">
                   <li>• AI considers student issues, strengths, and goals</li>
                   <li>• Backend research scraping runs automatically per student</li>
                   <li>• Plans are 90 days with weekly milestones</li>
@@ -136,15 +137,15 @@ export default function PlansPage() {
                 </Button>
               </>
             ) : (
-              <div className="bg-white rounded-lg shadow-lg p-12 h-full flex flex-col items-center justify-center text-center">
+              <div className="rounded-3xl border border-dashed border-white/15 bg-white/5 p-12 h-full flex flex-col items-center justify-center text-center">
                 <span className="text-6xl mb-4">📋</span>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-white mb-2">
                   {selectedStudent ? 'Ready to Generate' : 'Select a Student'}
                 </h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-slate-400 text-sm max-w-sm">
                   {selectedStudent
-                    ? 'Click "Generate Plan" to create a personalized learning plan powered by AI'
-                    : 'Choose a student from the form to generate their personalized learning plan'
+                    ? 'Click "Generate Plan" to create a personalized learning plan powered by AI.'
+                    : 'Choose a student from the form to generate their personalized learning plan.'
                   }
                 </p>
               </div>
@@ -153,20 +154,18 @@ export default function PlansPage() {
         </div>
 
         {/* Example Plans Section */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">📚 Example Plans</h2>
+        <div className="mt-14">
+          <h2 className="text-2xl font-semibold text-white mb-6">📚 Example Plans</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {mockPlans.map(plan => (
-              <div key={plan.id} className="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
-                <h3 className="font-bold text-gray-900 mb-2">{plan.title}</h3>
-                <p className="text-sm text-gray-600 mb-4">{plan.objectives}</p>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">
-                    {plan.startDate} to {plan.endDate}
+              <div key={plan.id} className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <h3 className="font-semibold text-white mb-2">{plan.title}</h3>
+                <p className="text-sm text-slate-400 mb-4">{plan.objectives}</p>
+                <div className="flex items-center justify-between text-xs text-slate-500 uppercase tracking-wide">
+                  <span>
+                    {plan.startDate} — {plan.endDate}
                   </span>
-                  <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold">
-                    {plan.status}
-                  </span>
+                  <span className="text-amber-300">{plan.status}</span>
                 </div>
               </div>
             ))}

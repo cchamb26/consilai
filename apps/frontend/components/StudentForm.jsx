@@ -39,10 +39,13 @@ export default function StudentForm({ onSubmit, initialData = null }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8 max-w-2xl">
-      <h2 className="text-2xl font-bold mb-6 text-gray-900">
+    <form onSubmit={handleSubmit} className="bg-slate-900/80 backdrop-blur rounded-2xl shadow-2xl border border-slate-800 p-8 max-w-2xl">
+      <h2 className="text-2xl font-bold mb-2 text-white">
         {initialData ? 'Edit Student' : 'Add New Student'}
       </h2>
+      <p className="text-sm text-slate-400 mb-6">
+        Capture student context and let ConsilAI handle the research behind the scenes.
+      </p>
 
       <div className="space-y-6">
         {/* Name */}
@@ -68,14 +71,14 @@ export default function StudentForm({ onSubmit, initialData = null }) {
 
         {/* Grade */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-slate-200 mb-2">
             Grade Level
           </label>
           <select
             name="grade"
             value={formData.grade}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border border-slate-700 rounded-lg bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option>Grade 9</option>
             <option>Grade 10</option>

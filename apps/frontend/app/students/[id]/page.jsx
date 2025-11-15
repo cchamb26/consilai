@@ -13,10 +13,10 @@ export default function StudentDetailPage({ params }) {
 
   if (!student) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Student not found</h1>
-          <Link href="/students" className="text-blue-600 hover:underline mt-4 inline-block">
+      <div className="min-h-screen bg-slate-950 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+          <h1 className="text-2xl font-semibold text-white">Student not found</h1>
+          <Link href="/students" className="text-indigo-300 hover:text-white transition inline-block">
             Back to Students
           </Link>
         </div>
@@ -25,15 +25,15 @@ export default function StudentDetailPage({ params }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-950 py-16">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Breadcrumb */}
-        <div className="mb-8 flex items-center space-x-2 text-sm">
-          <Link href="/" className="text-blue-600 hover:underline">Home</Link>
-          <span className="text-gray-400">/</span>
-          <Link href="/students" className="text-blue-600 hover:underline">Students</Link>
-          <span className="text-gray-400">/</span>
-          <span className="text-gray-600">{student.name}</span>
+        <div className="flex items-center space-x-2 text-sm text-slate-500">
+          <Link href="/" className="hover:text-white transition">Home</Link>
+          <span>/</span>
+          <Link href="/students" className="hover:text-white transition">Students</Link>
+          <span>/</span>
+          <span className="text-slate-300">{student.name}</span>
         </div>
 
         {/* Student Detail Panel */}
@@ -45,10 +45,10 @@ export default function StudentDetailPage({ params }) {
 
       {/* Plan Modal (if needed) */}
       {showPlanModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">Generate AI Plan</h3>
-            <p className="text-gray-600 mb-6">
+        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-900 border border-white/10 rounded-3xl shadow-2xl max-w-md w-full p-6 space-y-4">
+            <h3 className="text-xl font-semibold text-white">Generate AI Plan</h3>
+            <p className="text-slate-400">
               Use AI to generate a personalized learning plan for {student.name}?
             </p>
             <div className="flex gap-3">
