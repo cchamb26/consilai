@@ -9,14 +9,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50">
+      <body className="bg-slate-950 text-slate-100">
         <Navbar />
-        <main className="min-h-screen">
+        <main className="min-h-screen bg-slate-950">
           {children}
         </main>
-        <footer className="bg-gray-900 text-white py-6 mt-12">
-          <div className="max-w-7xl mx-auto px-4 text-center">
-            <p className="text-sm">© 2024 ConsilAI. All rights reserved.</p>
+        <footer className="bg-slate-950 border-t border-white/10 text-slate-500 py-8 mt-12">
+          <div className="max-w-6xl mx-auto px-4 text-center">
+            <p className="text-sm tracking-wide uppercase">© 2024 ConsilAI</p>
           </div>
         </footer>
       </body>

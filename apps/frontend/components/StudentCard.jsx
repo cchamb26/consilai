@@ -4,24 +4,24 @@ import Button from './Button';
 
 export default function StudentCard({ student }) {
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border border-gray-100">
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center space-x-3">
+    <div className="rounded-2xl bg-white/5 border border-white/10 backdrop-blur p-6 transition duration-300 hover:-translate-y-1 hover:bg-white/10">
+      <div className="flex items-start justify-between mb-6">
+        <div className="flex items-center gap-3">
           <StudentAvatar name={student.name} avatar={student.avatar} size="md" />
           <div>
-            <h3 className="font-bold text-lg text-gray-900">{student.name}</h3>
-            <p className="text-sm text-gray-500">{student.grade}</p>
+            <h3 className="text-lg font-semibold text-white">{student.name}</h3>
+            <p className="text-sm text-slate-400">{student.grade}</p>
           </div>
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {/* Issues */}
         <div>
-          <p className="text-xs font-semibold text-gray-600 uppercase">Current Issues</p>
-          <div className="flex flex-wrap gap-2 mt-1">
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Focus Areas</p>
+          <div className="flex flex-wrap gap-2 mt-2">
             {student.issues.slice(0, 2).map((issue, idx) => (
-              <span key={idx} className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
+              <span key={idx} className="text-xs px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-100 border border-rose-500/30">
                 {issue}
               </span>
             ))}
@@ -30,10 +30,10 @@ export default function StudentCard({ student }) {
 
         {/* Strengths */}
         <div>
-          <p className="text-xs font-semibold text-gray-600 uppercase">Strengths</p>
-          <div className="flex flex-wrap gap-2 mt-1">
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Strengths</p>
+          <div className="flex flex-wrap gap-2 mt-2">
             {student.strengths.slice(0, 2).map((strength, idx) => (
-              <span key={idx} className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+              <span key={idx} className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-100 border border-emerald-500/30">
                 {strength}
               </span>
             ))}
@@ -42,7 +42,7 @@ export default function StudentCard({ student }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2 mt-6">
+      <div className="flex gap-2 mt-8">
         <Link href={`/students/${student.id}`} className="flex-1">
           <Button variant="primary" size="sm" className="w-full">
             View Details

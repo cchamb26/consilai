@@ -61,9 +61,19 @@ export default function DeskGrid({ initialDesks }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
-      <h2 className="text-2xl font-bold mb-6 text-gray-900">🪑 Classroom Seating Chart</h2>
-      <p className="text-gray-600 mb-6">Drag and drop students to arrange seating</p>
+    <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur">
+      <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+        <div>
+          <h2 className="text-2xl font-semibold text-white">🪑 Classroom Seating</h2>
+          <p className="text-sm text-slate-400">Drag students to orchestrate seating dynamics</p>
+        </div>
+        {draggedStudent && (
+          <p className="text-sm text-indigo-300 flex items-center gap-2">
+            <span className="text-xs uppercase tracking-wider text-slate-400">Moving</span>
+            {draggedStudent.name}
+          </p>
+        )}
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {desks.map((desk) => (
@@ -78,11 +88,11 @@ export default function DeskGrid({ initialDesks }) {
       </div>
 
       {/* Stats */}
-      <div className="mt-8 pt-8 border-t-2 border-gray-200">
+      <div className="mt-10 pt-6 border-t border-white/10">
         <div className="grid grid-cols-3 gap-4">
-          <Stat label="Occupied" value={desks.filter(d => d.student).length} color="blue" />
-          <Stat label="Available" value={desks.filter(d => !d.student).length} color="gray" />
-          <Stat label="Total Desks" value={desks.length} color="green" />
+          <Stat label="Occupied" value={desks.filter(d => d.student).length} color="indigo" />
+          <Stat label="Available" value={desks.filter(d => !d.student).length} color="slate" />
+          <Stat label="Total Desks" value={desks.length} color="emerald" />
         </div>
       </div>
     </div>
@@ -91,15 +101,15 @@ export default function DeskGrid({ initialDesks }) {
 
 function Stat({ label, value, color }) {
   const colors = {
-    blue: 'text-blue-600',
-    gray: 'text-gray-600',
-    green: 'text-green-600',
+    indigo: 'text-indigo-300',
+    slate: 'text-slate-300',
+    emerald: 'text-emerald-300',
   };
 
   return (
-    <div className="text-center p-4 bg-gray-50 rounded-lg">
-      <p className={`text-2xl font-bold ${colors[color]}`}>{value}</p>
-      <p className="text-sm text-gray-600 mt-1">{label}</p>
+    <div className="text-center p-5 rounded-2xl bg-white/5 border border-white/10">
+      <p className={`text-2xl font-semibold ${colors[color]}`}>{value}</p>
+      <p className="text-xs uppercase tracking-wide text-slate-500 mt-2">{label}</p>
     </div>
   );
 }

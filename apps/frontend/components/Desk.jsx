@@ -36,17 +36,16 @@ export default function Desk({ desk, onDragStart, onDrop, onDragOver }) {
 
   return (
     <div
-      draggable={desk.student ? true : false}
+      draggable={!!desk.student}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`
-        p-4 rounded-lg border-2 flex flex-col items-center justify-center
-        min-h-24 cursor-move transition-all
-        ${desk.student ? 'bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-300' : ''}
-        ${!desk.student ? 'bg-gray-50 border-dashed border-gray-300 hover:bg-gray-100' : ''}
-        ${isDragOver ? 'bg-yellow-100 border-yellow-400 scale-105' : ''}
+        p-5 rounded-2xl border flex flex-col items-center justify-center gap-2
+        min-h-28 cursor-move transition-all duration-300
+        ${desk.student ? 'bg-white/5 border-white/15 hover:bg-white/10' : 'border-dashed border-white/10 bg-transparent hover:border-white/30'}
+        ${isDragOver ? 'border-indigo-400 bg-indigo-500/10 scale-[1.02]' : ''}
       `}
     >
       {desk.student ? (
@@ -57,16 +56,16 @@ export default function Desk({ desk, onDragStart, onDrop, onDragOver }) {
             size="md"
             className="mb-2"
           />
-          <p className="text-center text-sm font-semibold text-gray-900">
+          <p className="text-center text-sm font-semibold text-white">
             {desk.student.name.split(' ')[0]}
           </p>
-          <p className="text-xs text-gray-600">{desk.id}</p>
+          <p className="text-xs text-slate-400">{desk.id}</p>
         </>
       ) : (
         <>
-          <span className="text-3xl text-gray-300 mb-2">🪑</span>
-          <p className="text-xs text-gray-500 text-center">{desk.id}</p>
-          <p className="text-xs text-gray-400 mt-1">Drop student here</p>
+          <span className="text-3xl text-slate-700 mb-1">🪑</span>
+          <p className="text-xs text-slate-500 text-center">{desk.id}</p>
+          <p className="text-xs text-slate-600 mt-1">Drop student here</p>
         </>
       )}
     </div>

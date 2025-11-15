@@ -6,97 +6,98 @@ export default function Home() {
     {
       id: 1,
       title: 'Students',
-      description: 'Manage and track student profiles, issues, strengths, and goals',
+      description: 'All profiles, history, and context surfaced instantly.',
       icon: '👥',
       href: '/students',
-      color: 'from-blue-400 to-blue-600',
+      accent: 'from-cyan-500 to-blue-500',
     },
     {
       id: 2,
       title: 'Classroom Simulation',
-      description: 'Interactive seating chart with drag-and-drop placement',
+      description: 'Design seating layouts that adapt to behavior and goals.',
       icon: '🪑',
       href: '/classroom',
-      color: 'from-purple-400 to-purple-600',
+      accent: 'from-purple-500 to-indigo-500',
     },
     {
       id: 3,
       title: 'AI Plan Generator',
-      description: 'Generate personalized learning plans backed by leading educational research',
+      description: 'Generate personalized plans backed by hidden research.',
       icon: '🤖',
       href: '/plans',
-      color: 'from-yellow-400 to-yellow-600',
+      accent: 'from-amber-400 to-rose-400',
     },
   ];
 
   const workflowSteps = [
     {
-      number: '1',
+      number: '01',
       title: 'Profile Students',
-      description: 'Capture each student’s issues, goals, and strengths in the UI.',
+      description: 'Issues, goals, strengths, context—captured in seconds.',
     },
     {
-      number: '2',
-      title: 'Auto Keyword Extraction',
-      description: 'The backend transforms student details into smart research search terms.',
+      number: '02',
+      title: 'Machine Understanding',
+      description: 'Backend extracts linguistic signals and research keywords.',
     },
     {
-      number: '3',
-      title: 'Background Research Scrape',
-      description: 'Scrapers quietly gather current evidence—no uploads required from teachers.',
+      number: '03',
+      title: 'Silent Research',
+      description: 'Scrapers collect the latest, high-signal academic findings.',
     },
     {
-      number: '4',
+      number: '04',
       title: 'AI Summaries',
-      description: 'Backend services condense the research corpus into actionable insights.',
+      description: 'Insights condensed into evidence-backed recommendations.',
     },
     {
-      number: '5',
-      title: 'Plan Generator',
-      description: 'Teachers view the finalized, research-backed plan directly in the UI.',
+      number: '05',
+      title: 'Plan Delivery',
+      description: 'You see a polished plan—no uploads, no extra steps.',
     },
   ];
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="bg-slate-950 text-slate-100">
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center">
-          <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6">
-            Welcome to <span className="text-blue-600">ConsilAI</span>
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="space-y-8">
+          <p className="text-sm uppercase tracking-[0.4em] text-slate-500">ConsilAI</p>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight">
+            A calm command center for every student, every classroom, every plan.
           </h1>
-          <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            AI-Powered Teacher Assistant for Student Support & Classroom Management
+          <p className="text-lg text-slate-400 max-w-3xl">
+            ConsilAI pairs elegant tooling with invisible research automation. Profile students, shape classrooms, and deliver AI plans that feel handcrafted—without exposing the complexity underneath.
           </p>
-          <p className="text-gray-600 max-w-2xl mx-auto mb-12">
-            Manage student profiles, simulate classrooms, and deliver research-backed learning plans—our backend handles every research scrape and summary automatically.
-          </p>
-          <Link href="/students">
-            <Button variant="primary" size="lg">
-              Get Started
-            </Button>
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/students">
+              <Button variant="primary" size="lg">
+                Explore Students
+              </Button>
+            </Link>
+            <Link href="/plans">
+              <Button variant="secondary" size="lg">
+                Generate a Plan
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Core Features</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Feature Cards */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature) => (
-            <Link key={feature.id} href={feature.href}>
-              <div className="bg-white rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 cursor-pointer h-full">
-                <div className={`bg-gradient-to-r ${feature.color} h-32 flex items-center justify-center`}>
-                  <span className="text-6xl">{feature.icon}</span>
+            <Link key={feature.id} href={feature.href} className="group">
+              <div className="h-full rounded-3xl border border-white/10 bg-white/5 p-6 hover:border-white/30 transition">
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.accent} flex items-center justify-center text-2xl mb-6`}>
+                  {feature.icon}
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{feature.description}</p>
-                  <div className="text-blue-600 font-semibold text-sm">
-                    Explore →
-                  </div>
-                </div>
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm text-slate-400 mb-6">{feature.description}</p>
+                <span className="text-sm text-slate-300 group-hover:text-white transition">
+                  Open →
+                </span>
               </div>
             </Link>
           ))}
@@ -104,11 +105,17 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="bg-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">How It Works</h2>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-10 space-y-10">
+          <div className="space-y-3">
+            <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Flow</p>
+            <h2 className="text-3xl font-semibold">Research stays hidden. The experience stays effortless.</h2>
+            <p className="text-slate-400 max-w-3xl">
+              ConsilAI mirrors the best AI tools: minimal UI, maximal intelligence. Every plan is powered by quiet automation you never have to manage.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {workflowSteps.map(step => (
               <Step
                 key={step.number}
@@ -118,31 +125,31 @@ export default function Home() {
               />
             ))}
           </div>
-
-          <div className="mt-16 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-8 border-2 border-blue-200">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">🎯 Plus: Interactive Classroom</h3>
-            <p className="text-gray-700 mb-4">
-              Simulate classroom seating arrangements with drag-and-drop functionality. Organize your classroom to optimize student interactions and collaboration.
-            </p>
-            <Link href="/classroom">
-              <Button variant="primary">Try Classroom Simulator</Button>
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-12 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Teaching?</h2>
-          <p className="text-lg mb-8 text-blue-100">
-            Start using ConsilAI today to support your students better.
-          </p>
-          <Link href="/students">
-            <Button variant="primary" size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-              Get Started Now
-            </Button>
-          </Link>
+      {/* CTA */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-500/30 via-slate-900 to-slate-950 p-10 flex flex-col gap-6">
+          <div className="space-y-4">
+            <p className="text-sm uppercase tracking-[0.4em] text-indigo-200">Start</p>
+            <h3 className="text-3xl font-semibold">Orchestrate every student journey from one calm interface.</h3>
+            <p className="text-slate-200 max-w-2xl">
+              Students, classrooms, plans—kept in sync with zero clutter. ConsilAI keeps research invisible so you can focus on decisions, not documentation.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/students">
+              <Button variant="primary" size="lg">
+                Go to Students
+              </Button>
+            </Link>
+            <Link href="/classroom">
+              <Button variant="outline" size="lg">
+                Open Classroom
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
@@ -151,12 +158,10 @@ export default function Home() {
 
 function Step({ number, title, description }) {
   return (
-    <div className="text-center">
-      <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full font-bold text-xl">
-        {number}
-      </div>
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
-      <p className="text-gray-600">{description}</p>
+    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 h-full flex flex-col gap-3">
+      <span className="text-xs uppercase tracking-[0.4em] text-slate-500">{number}</span>
+      <h4 className="text-lg font-semibold text-white">{title}</h4>
+      <p className="text-sm text-slate-400">{description}</p>
     </div>
   );
 }
