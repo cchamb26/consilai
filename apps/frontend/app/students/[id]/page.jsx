@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { mockStudents } from '../../../lib/mockData';
 import StudentDetailPanel from '../../../components/StudentDetailPanel';
@@ -9,8 +9,27 @@ import { ProtectedRoute } from '../../../lib/ProtectedRoute';
 
 export default function StudentDetailPage({ params }) {
   const [showPlanModal, setShowPlanModal] = useState(false);
+  const [student, setStudent] = useState(null);
+  const [loading, setLoading] = useState(true);
   
-  const student = mockStudents.find(s => s.id === params.id);
+  useEffect(() => {
+    // Try to load from localStorage first
+    const savedStudents = localStorage.getItem('students');
+    if (savedStudents) {
+      const students = JSON.parse(savedStudents);
+      const found = students.find(s => s.id === params.id);
+      if (found) {
+        setStudent(found);
+        setLoading(false);
+        return;
+      }
+    }
+
+    // Fall back to mockStudents
+    const mockStudent = mockStudents.find(s => s.id === params.id);
+    setStudent(mockStudent || null);
+    setLoading(false);
+  }, [params.id]);
 
   if (!student) {
     return (
@@ -27,17 +46,34 @@ export default function StudentDetailPage({ params }) {
     );
   }
 
+  if (loading) {
+    return (
+      <ProtectedRoute>
+        <div className="flex items-center justify-center min-h-screen bg-slate-950">
+          <div className="text-slate-300">Loading...</div>
+        </div>
+      </ProtectedRoute>
+    );
+  }
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-slate-950 py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          {/* Breadcrumb */}
-          <div className="flex items-center space-x-2 text-sm text-slate-500">
-            <Link href="/" className="hover:text-white transition">Home</Link>
-            <span>/</span>
-            <Link href="/students" className="hover:text-white transition">Students</Link>
-            <span>/</span>
-            <span className="text-slate-300">{student.name}</span>
+          {/* Breadcrumb + Edit Button */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 text-sm text-slate-500">
+              <Link href="/" className="hover:text-white transition">Home</Link>
+              <span>/</span>
+              <Link href="/students" className="hover:text-white transition">Students</Link>
+              <span>/</span>
+              <span className="text-slate-300">{student.name}</span>
+            </div>
+            <Link href={`/students/${student.id}/edit`}>
+              <Button variant="outline" size="sm">
+                ✏️ Edit Student
+              </Button>
+            </Link>
           </div>
 
           {/* Student Detail Panel */}

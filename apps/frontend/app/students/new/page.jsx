@@ -1,18 +1,37 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from '../../../components/Button';
 import StudentForm from '../../../components/StudentForm';
 import { ProtectedRoute } from '../../../lib/ProtectedRoute';
 
 export default function NewStudentPage() {
+  const router = useRouter();
+
   const handleSubmit = (formData) => {
-    console.log('New student submitted:', formData);
-    // In a real app, this would send data to the backend
-    alert('Student added! (This is a demo - data is not persisted)');
+    // Get existing students
+    const savedStudents = localStorage.getItem('students');
+    const students = savedStudents ? JSON.parse(savedStudents) : [];
+
+    // Create new student with unique ID
+    const newStudent = {
+      ...formData,
+      id: Date.now().toString(),
+      seatPosition: { x: 0, y: 0 },
+    };
+
+    // Add to students list
+    const updatedStudents = [...students, newStudent];
+    localStorage.setItem('students', JSON.stringify(updatedStudents));
+
+    // Redirect back to students page
+    router.push('/students');
   };
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-950 py-16">
+      <div className="min-h-screen bg-slate-950 py-16" key={"new-student"}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Breadcrumb */}
         <div className="flex items-center space-x-2 text-sm text-slate-500">

@@ -5,14 +5,18 @@ import Input from './Input';
 import Textarea from './Textarea';
 import Button from './Button';
 
+const EMOJIS = ['👨‍🎓', '👩‍🎓', '👨‍🦱', '👩‍🦱', '👨‍💼', '👩‍💼', '🧑‍🎓', '👦', '👧', '🧒', '👨‍🔬', '👩‍🔬', '🎨', '⭐', '🚀', '🌟'];
+
 export default function StudentForm({ onSubmit, initialData = null }) {
   const [formData, setFormData] = useState(initialData || {
+    id: '',
     name: '',
     email: '',
     grade: 'Grade 10',
     issues: '',
     strengths: '',
     goals: '',
+    avatar: '👨‍🎓',
   });
 
   const [errors, setErrors] = useState({});
@@ -25,18 +29,36 @@ export default function StudentForm({ onSubmit, initialData = null }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Simple validation
+    // Comprehensive validation
     const newErrors = {};
-    if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.name || formData.name.trim() === '') newErrors.name = 'Name is required';
+    if (!formData.email || formData.email.trim() === '') newErrors.email = 'Email is required';
+    if (!formData.issues || formData.issues.trim() === '') newErrors.issues = 'Issues are required';
+    if (!formData.strengths || formData.strengths.trim() === '') newErrors.strengths = 'Strengths are required';
+    if (!formData.goals || formData.goals.trim() === '') newErrors.goals = 'Learning goals are required';
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    onSubmit?.(formData);
+    // Convert comma-separated strings to arrays
+    const submittedData = {
+      ...formData,
+      issues: formData.issues ? formData.issues.split(',').map(s => s.trim()).filter(s => s) : [],
+      strengths: formData.strengths ? formData.strengths.split(',').map(s => s.trim()).filter(s => s) : [],
+      goals: formData.goals ? formData.goals.split(',').map(s => s.trim()).filter(s => s) : [],
+    };
+
+    onSubmit?.(submittedData);
   };
+
+  // Check if form is complete
+  const isFormComplete = formData.name?.trim() && 
+                         formData.email?.trim() && 
+                         formData.issues?.trim() && 
+                         formData.strengths?.trim() && 
+                         formData.goals?.trim();
 
   return (
     <form onSubmit={handleSubmit} className="bg-slate-900/80 backdrop-blur rounded-2xl shadow-2xl border border-slate-800 p-8 max-w-2xl">
@@ -80,6 +102,15 @@ export default function StudentForm({ onSubmit, initialData = null }) {
             onChange={handleChange}
             className="w-full px-4 py-2 border border-slate-700 rounded-lg bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
+            <option>Kindergarten</option>
+            <option>Grade 1</option>
+            <option>Grade 2</option>
+            <option>Grade 3</option>
+            <option>Grade 4</option>
+            <option>Grade 5</option>
+            <option>Grade 6</option>
+            <option>Grade 7</option>
+            <option>Grade 8</option>
             <option>Grade 9</option>
             <option>Grade 10</option>
             <option>Grade 11</option>
@@ -116,11 +147,40 @@ export default function StudentForm({ onSubmit, initialData = null }) {
           onChange={handleChange}
           rows={3}
         />
+
+        {/* Avatar/Emoji Selector */}
+        <div>
+          <label className="block text-sm font-medium text-slate-200 mb-3">
+            Student Avatar
+          </label>
+          <div className="grid grid-cols-8 gap-2">
+            {EMOJIS.map(emoji => (
+              <button
+                key={emoji}
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, avatar: emoji }))}
+                className={`text-3xl p-3 rounded-lg transition ${
+                  formData.avatar === emoji
+                    ? 'bg-indigo-500 scale-110'
+                    : 'bg-slate-800 hover:bg-slate-700'
+                }`}
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Buttons */}
       <div className="flex gap-4 mt-8">
-        <Button type="submit" variant="primary" size="lg">
+        <Button 
+          type="submit" 
+          variant="primary" 
+          size="lg"
+          disabled={!isFormComplete}
+          className={!isFormComplete ? 'opacity-50 cursor-not-allowed' : ''}
+        >
           {initialData ? 'Save Changes' : 'Add Student'}
         </Button>
         <Button type="button" variant="secondary" size="lg" onClick={() => window.history.back()}>
