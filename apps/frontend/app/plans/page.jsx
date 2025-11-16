@@ -80,38 +80,53 @@ export default function PlansPage() {
 
     setIsGenerating(true);
 
-    // Simulate API call (replace with real AI plan generation API)
-    setTimeout(() => {
-      const firstStrength =
-        Array.isArray(student.strengths) && student.strengths.length > 0
-          ? student.strengths[0]
-          : 'their strengths';
-      const firstIssue =
-        Array.isArray(student.issues) && student.issues.length > 0
-          ? student.issues[0]
-          : 'their current challenges';
+    try {
+      const response = await fetch('/api/generate-plan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          student,
+          customInstructions: customPrompt,
+          durationWeeks: 3,
+        }),
+      });
 
-      const mockGeneratedPlan = {
+      if (!response.ok) {
+        const text = await response.text();
+        console.error('Plan generation failed:', response.status, text);
+        alert('Failed to generate plan. Please try again.');
+        return;
+      }
+
+      const { plan } = await response.json();
+
+      const aiGeneratedPlan = {
         id: Date.now(),
-        studentId: selectedStudent,
+        studentId: plan.studentId,
         studentName: student.name,
         title: 'Personalized Learning Plan',
-        objectives: `This plan focuses on developing ${firstStrength} while addressing ${firstIssue}. The curriculum automatically incorporates backend research summaries and personalized strategies tailored to ${student.name}'s unique profile.`,
+        objectives: plan.overallGoal,
         startDate: new Date().toISOString().split('T')[0],
-        endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        endDate: new Date(
+          Date.now() + plan.durationWeeks * 7 * 24 * 60 * 60 * 1000,
+        )
+          .toISOString()
+          .split('T')[0],
         status: 'Generated',
-        milestones: [
-          `Week 1-2: Assess current baseline for "${firstIssue}"`,
-          `Week 3-4: Implement peer mentoring sessions leveraging "${firstStrength}"`,
-          `Week 5-8: Progressive skill building with weekly check-ins`,
-          `Week 9-12: Evaluation and plan refinement based on progress`,
-          `Celebrate progress and plan next phases`,
-        ],
+        milestones: Array.isArray(plan.segments)
+          ? plan.segments.map((seg) => `${seg.weekLabel}: ${seg.focus}`)
+          : [],
       };
 
-      setGeneratedPlan(mockGeneratedPlan);
+      setGeneratedPlan(aiGeneratedPlan);
+    } catch (err) {
+      console.error('Unexpected error generating plan:', err);
+      alert('Failed to generate plan. Please try again.');
+    } finally {
       setIsGenerating(false);
-    }, 1500);
+    }
   };
 
   return (
