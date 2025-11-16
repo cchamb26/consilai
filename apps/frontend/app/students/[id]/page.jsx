@@ -2,36 +2,49 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { mockStudents } from '../../../lib/mockData';
 import StudentDetailPanel from '../../../components/StudentDetailPanel';
 import Button from '../../../components/Button';
 import { ProtectedRoute } from '../../../lib/ProtectedRoute';
+import { getSupabaseClient } from '../../../lib/supabaseClient';
 
 export default function StudentDetailPage({ params }) {
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   useEffect(() => {
-    // Try to load from localStorage first
-    const savedStudents = localStorage.getItem('students');
-    if (savedStudents) {
-      const students = JSON.parse(savedStudents);
-      const found = students.find(s => s.id === params.id);
-      if (found) {
-        setStudent(found);
-        setLoading(false);
-        return;
-      }
-    }
+    const fetchStudent = async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { data, error } = await supabase
+          .from('students')
+          .select('*')
+          .eq('id', params.id)
+          .single();
 
-    // Fall back to mockStudents
-    const mockStudent = mockStudents.find(s => s.id === params.id);
-    setStudent(mockStudent || null);
-    setLoading(false);
+        if (error) {
+          if (error.code === 'PGRST116' || error.message?.includes('No rows')) {
+            setStudent(null);
+          } else {
+            console.error('Error fetching student:', error);
+            setError('Failed to load student');
+          }
+        } else {
+          setStudent(data);
+        }
+      } catch (err) {
+        console.error('Unexpected error fetching student:', err);
+        setError('Failed to load student');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudent();
   }, [params.id]);
 
-  if (!student) {
+  if (!loading && !student) {
     return (
       <ProtectedRoute>
         <div className="min-h-screen bg-slate-950 py-16">
@@ -51,6 +64,22 @@ export default function StudentDetailPage({ params }) {
       <ProtectedRoute>
         <div className="flex items-center justify-center min-h-screen bg-slate-950">
           <div className="text-slate-300">Loading...</div>
+        </div>
+      </ProtectedRoute>
+    );
+  }
+
+  if (error) {
+    return (
+      <ProtectedRoute>
+        <div className="min-h-screen bg-slate-950 py-16">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+            <h1 className="text-2xl font-semibold text-white">Error loading student</h1>
+            <p className="text-slate-400">{error}</p>
+            <Link href="/students" className="text-indigo-300 hover:text-white transition inline-block">
+              Back to Students
+            </Link>
+          </div>
         </div>
       </ProtectedRoute>
     );

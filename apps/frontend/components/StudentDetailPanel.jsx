@@ -2,6 +2,10 @@ import StudentAvatar from './StudentAvatar';
 import Button from './Button';
 
 export default function StudentDetailPanel({ student, onEditPlan }) {
+  const issues = Array.isArray(student.issues) ? student.issues : [];
+  const strengths = Array.isArray(student.strengths) ? student.strengths : [];
+  const goals = Array.isArray(student.goals) ? student.goals : [];
+
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur max-w-4xl">
       {/* Header */}
@@ -22,7 +26,7 @@ export default function StudentDetailPanel({ student, onEditPlan }) {
         {/* Issues */}
         <Section title="Focus Areas" icon="⚠️">
           <div className="space-y-2">
-            {student.issues.map((issue, idx) => (
+            {issues.map((issue, idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <span className="text-rose-400 mt-1">•</span>
                 <span className="text-slate-200">{issue}</span>
@@ -34,7 +38,7 @@ export default function StudentDetailPanel({ student, onEditPlan }) {
         {/* Strengths */}
         <Section title="Strengths" icon="⭐">
           <div className="space-y-2">
-            {student.strengths.map((strength, idx) => (
+            {strengths.map((strength, idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <span className="text-emerald-400 mt-1">•</span>
                 <span className="text-slate-200">{strength}</span>
@@ -46,7 +50,7 @@ export default function StudentDetailPanel({ student, onEditPlan }) {
         {/* Goals */}
         <Section title="Learning Goals" icon="🎯">
           <div className="space-y-2">
-            {student.goals.map((goal, idx) => (
+            {goals.map((goal, idx) => (
               <div key={idx} className="flex items-start gap-2">
                 <span className="text-sky-400 mt-1">•</span>
                 <span className="text-slate-200">{goal}</span>
@@ -58,9 +62,9 @@ export default function StudentDetailPanel({ student, onEditPlan }) {
         {/* Quick Stats */}
         <Section title="Snapshot" icon="📊">
           <div className="grid grid-cols-2 gap-4">
-            <Stat label="Issues" value={student.issues.length} />
-            <Stat label="Strengths" value={student.strengths.length} />
-            <Stat label="Goals" value={student.goals.length} />
+            <Stat label="Issues" value={issues.length} />
+            <Stat label="Strengths" value={strengths.length} />
+            <Stat label="Goals" value={goals.length} />
             <Stat label="Status" value="Active" />
           </div>
         </Section>

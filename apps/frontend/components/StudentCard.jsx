@@ -20,8 +20,11 @@ export default function StudentCard({ student, onEdit }) {
         <div>
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Focus Areas</p>
           <div className="flex flex-wrap gap-2 mt-2">
-            {student.issues.slice(0, 2).map((issue, idx) => (
-              <span key={idx} className="text-xs px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-100 border border-rose-500/30">
+            {(student.issues || []).slice(0, 2).map((issue, idx) => (
+              <span
+                key={idx}
+                className="text-xs px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-100 border border-rose-500/30"
+              >
                 {issue}
               </span>
             ))}
@@ -32,8 +35,11 @@ export default function StudentCard({ student, onEdit }) {
         <div>
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Strengths</p>
           <div className="flex flex-wrap gap-2 mt-2">
-            {student.strengths.slice(0, 2).map((strength, idx) => (
-              <span key={idx} className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-100 border border-emerald-500/30">
+            {(student.strengths || []).slice(0, 2).map((strength, idx) => (
+              <span
+                key={idx}
+                className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-100 border border-emerald-500/30"
+              >
                 {strength}
               </span>
             ))}

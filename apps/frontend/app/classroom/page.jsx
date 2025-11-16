@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import { Notification } from '../../components/Notification';
 import { generateSeatingChart } from '../../lib/rbsbSeating';
 import { ProtectedRoute } from '../../lib/ProtectedRoute';
+import { getSupabaseClient } from '../../lib/supabaseClient';
 
 export default function ClassroomPage() {
   const [desks, setDesks] = useState([]);
@@ -14,6 +15,9 @@ export default function ClassroomPage() {
   const [initialRows, setInitialRows] = useState(4);
   const [initialCols, setInitialCols] = useState(4);
   const [lastSavedState, setLastSavedState] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [notification, setNotification] = useState(null);
 
@@ -22,140 +26,187 @@ export default function ClassroomPage() {
     setNotification({ message, type });
   };
 
-  // Poll for student count changes and add rows if needed
+  // Load students from Supabase and initialize desks
   useEffect(() => {
-    const interval = setInterval(() => {
-      const savedStudents = localStorage.getItem('students');
-      const students = savedStudents ? JSON.parse(savedStudents) : [];
-      const currentCapacity = rows * cols;
+    const init = async () => {
+      try {
+        const supabase = getSupabaseClient();
+        // Fetch all students for the current teacher
+        const { data, error } = await supabase
+          .from('teacher_students')
+          .select('*')
+          .order('created_at', { ascending: true });
 
-      if (students.length > currentCapacity) {
-        const rowsNeeded = Math.ceil(students.length / cols);
-        const newDesks = Array.from({ length: rowsNeeded * cols }, (_, index) => {
-          const row = Math.floor(index / cols);
-          const col = index % cols;
-          const student = students[index] || null;
-          return {
-            id: `desk-${index + 1}`,
-            position: { x: col, y: row },
-            student,
-            available: !student,
-          };
-        });
-        setDesks(newDesks);
-        setRows(rowsNeeded);
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, [rows, cols]);
+        if (error) {
+          console.error('Error fetching students for classroom:', error);
+          setError('Failed to load students for classroom');
+          setStudents([]);
+        } else {
+          const loadedStudents = data || [];
+          setStudents(loadedStudents);
 
-  // Load students from localStorage and initialize desks - refresh on every visit
-  useEffect(() => {
-    const savedStudents = localStorage.getItem('students');
-    const students = savedStudents ? JSON.parse(savedStudents) : [];
-    
-    // Load saved seating layout if it exists
-    const savedSeating = localStorage.getItem('classroomSeating');
-    const savedLayout = savedSeating ? JSON.parse(savedSeating) : null;
+          // Load saved seating layout if it exists
+          const savedSeating = typeof window !== 'undefined'
+            ? window.localStorage.getItem('classroomSeating')
+            : null;
+          const savedLayout = savedSeating ? JSON.parse(savedSeating) : null;
 
-    if (savedLayout) {
-      // Collect all currently placed students from saved layout
-      const placedStudentIds = new Set(savedLayout.desks.map(d => d.student?.id).filter(Boolean));
-      
-      // Find new students that aren't in the saved layout
-      const newStudents = students.filter(s => !placedStudentIds.has(s.id));
-      
-      // Collect all students (existing + new)
-      const allStudents = [...savedLayout.desks.map(d => d.student).filter(Boolean), ...newStudents];
-      
-      // Calculate if we need more desks
-      const currentCapacity = savedLayout.rows * savedLayout.cols;
-      const neededCapacity = allStudents.length;
-      
-      let finalRows = savedLayout.rows;
-      let finalCols = savedLayout.cols;
-      
-      // Expand grid if needed to fit all students
-      if (neededCapacity > currentCapacity) {
-        finalRows = Math.ceil(neededCapacity / savedLayout.cols);
-      }
-      
-      // Rebuild desks array - start with empty desks
-      const newDeskCount = finalRows * finalCols;
-      const updatedDesks = Array.from({ length: newDeskCount }, (_, index) => {
-        const row = Math.floor(index / finalCols);
-        const col = index % finalCols;
-        return {
-          id: `desk-${index + 1}`,
-          position: { x: col, y: row },
-          student: null,
-          available: true,
-        };
-      });
-      
-      const usedStudentIds = new Set();
-      
-      // First pass: preserve existing student positions
-      savedLayout.desks.forEach((oldDesk, oldIndex) => {
-        if (oldDesk.student) {
-          const oldRow = Math.floor(oldIndex / savedLayout.cols);
-          const newRow = Math.min(oldRow, finalRows - 1);
-          const oldCol = oldIndex % savedLayout.cols;
-          const newCol = Math.min(oldCol, finalCols - 1);
-          const newIndex = newRow * finalCols + newCol;
-          
-          if (newIndex < updatedDesks.length && !updatedDesks[newIndex].student) {
-            updatedDesks[newIndex] = {
-              ...updatedDesks[newIndex],
-              student: oldDesk.student,
-              available: false,
-            };
-            usedStudentIds.add(oldDesk.student.id);
+          if (savedLayout) {
+            // Map saved students by id to fresh copies from Supabase
+            const studentById = new Map(
+              loadedStudents.map((s) => [s.id, s]),
+            );
+
+            const placedStudentIds = new Set(
+              savedLayout.desks
+                .map((d) => d.student?.id)
+                .filter(Boolean),
+            );
+
+            const newStudents = loadedStudents.filter(
+              (s) => !placedStudentIds.has(s.id),
+            );
+
+            const currentCapacity =
+              savedLayout.rows * savedLayout.cols;
+            const neededCapacity =
+              placedStudentIds.size + newStudents.length;
+
+            let finalRows = savedLayout.rows;
+            let finalCols = savedLayout.cols;
+
+            if (neededCapacity > currentCapacity) {
+              finalRows = Math.ceil(
+                neededCapacity / savedLayout.cols,
+              );
+            }
+
+            const newDeskCount = finalRows * finalCols;
+            const updatedDesks = Array.from(
+              { length: newDeskCount },
+              (_, index) => {
+                const row = Math.floor(index / finalCols);
+                const col = index % finalCols;
+                return {
+                  id: `desk-${index + 1}`,
+                  position: { x: col, y: row },
+                  student: null,
+                  available: true,
+                };
+              },
+            );
+
+            const usedStudentIds = new Set();
+
+            // Preserve existing positions, but replace embedded student with fresh DB copy
+            savedLayout.desks.forEach((oldDesk, oldIndex) => {
+              const oldStudentId = oldDesk.student?.id;
+              const freshStudent = oldStudentId
+                ? studentById.get(oldStudentId)
+                : null;
+
+              if (freshStudent) {
+                const oldRow = Math.floor(
+                  oldIndex / savedLayout.cols,
+                );
+                const newRow = Math.min(
+                  oldRow,
+                  finalRows - 1,
+                );
+                const oldCol = oldIndex % savedLayout.cols;
+                const newCol = Math.min(
+                  oldCol,
+                  finalCols - 1,
+                );
+                const newIndex =
+                  newRow * finalCols + newCol;
+
+                if (
+                  newIndex < updatedDesks.length &&
+                  !updatedDesks[newIndex].student
+                ) {
+                  updatedDesks[newIndex] = {
+                    ...updatedDesks[newIndex],
+                    student: freshStudent,
+                    available: false,
+                  };
+                  usedStudentIds.add(freshStudent.id);
+                }
+              }
+            });
+
+            // Place new students in any remaining available desks
+            let availableIndex = 0;
+            newStudents.forEach((newStudent) => {
+              while (
+                availableIndex < updatedDesks.length &&
+                updatedDesks[availableIndex].student
+              ) {
+                availableIndex += 1;
+              }
+              if (availableIndex < updatedDesks.length) {
+                updatedDesks[availableIndex] = {
+                  ...updatedDesks[availableIndex],
+                  student: newStudent,
+                  available: false,
+                };
+                usedStudentIds.add(newStudent.id);
+                availableIndex += 1;
+              }
+            });
+
+            setDesks(updatedDesks);
+            setRows(finalRows);
+            setCols(finalCols);
+            setInitialRows(finalRows);
+            setInitialCols(finalCols);
+            setLastSavedState({
+              ...savedLayout,
+              desks: updatedDesks,
+              rows: finalRows,
+              cols: finalCols,
+            });
+          } else {
+            // No saved layout: build a fresh grid from Supabase students
+            const neededCapacity = loadedStudents.length;
+            const initialCapacity = rows * cols;
+            const finalRows =
+              neededCapacity > initialCapacity
+                ? Math.ceil(neededCapacity / cols)
+                : rows;
+
+            const initialDesks = Array.from(
+              { length: finalRows * cols },
+              (_, index) => ({
+                id: `desk-${index + 1}`,
+                position: {
+                  x: index % cols,
+                  y: Math.floor(index / cols),
+                },
+                student: loadedStudents[index] || null,
+                available: !loadedStudents[index],
+              }),
+            );
+
+            setDesks(initialDesks);
+            setRows(finalRows);
+            setInitialRows(finalRows);
+            setInitialCols(cols);
           }
         }
-      });
-      
-      // Second pass: place new students in available desks
-      let availableIndex = 0;
-      newStudents.forEach(newStudent => {
-        while (availableIndex < updatedDesks.length && updatedDesks[availableIndex].student) {
-          availableIndex++;
-        }
-        if (availableIndex < updatedDesks.length) {
-          updatedDesks[availableIndex] = {
-            ...updatedDesks[availableIndex],
-            student: newStudent,
-            available: false,
-          };
-          usedStudentIds.add(newStudent.id);
-          availableIndex++;
-        }
-      });
-      
-      setDesks(updatedDesks);
-      setRows(finalRows);
-      setCols(finalCols);
-      setInitialRows(finalRows);
-      setInitialCols(finalCols);
-      setLastSavedState({ ...savedLayout, desks: updatedDesks, rows: finalRows, cols: finalCols });
-    } else {
-      // Create initial desks with all students from localStorage
-      const neededCapacity = students.length;
-      const initialCapacity = rows * cols;
-      const finalRows = neededCapacity > initialCapacity ? Math.ceil(neededCapacity / cols) : rows;
-      
-      const initialDesks = Array.from({ length: finalRows * cols }, (_, index) => ({
-        id: `desk-${index + 1}`,
-        position: { x: index % cols, y: Math.floor(index / cols) },
-        student: students[index] || null,
-        available: !students[index],
-      }));
-      setDesks(initialDesks);
-      setRows(finalRows);
-      setInitialRows(finalRows);
-      setInitialCols(cols);
-    }
-  }, []);
+      } catch (err) {
+        console.error(
+          'Unexpected error initializing classroom:',
+          err,
+        );
+        setError('Failed to load students for classroom');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    init();
+  }, [rows, cols]);
 
   const handleSave = () => {
     const seatingData = {
@@ -179,16 +230,19 @@ export default function ClassroomPage() {
       return;
     }
 
-    // Otherwise reset to initial state
-    const savedStudents = localStorage.getItem('students');
-    const students = savedStudents ? JSON.parse(savedStudents) : [];
-    
-    const resetDesks = Array.from({ length: initialRows * initialCols }, (_, index) => ({
-      id: `desk-${index + 1}`,
-      position: { x: index % initialCols, y: Math.floor(index / initialCols) },
-      student: students[index] || null,
-      available: !students[index],
-    }));
+    // Otherwise reset to initial state using current Supabase students
+    const resetDesks = Array.from(
+      { length: initialRows * initialCols },
+      (_, index) => ({
+        id: `desk-${index + 1}`,
+        position: {
+          x: index % initialCols,
+          y: Math.floor(index / initialCols),
+        },
+        student: students[index] || null,
+        available: !students[index],
+      }),
+    );
     
     setDesks(resetDesks);
     setRows(initialRows);
@@ -309,12 +363,11 @@ export default function ClassroomPage() {
   };
 
   const handleAddRow = () => {
-    const savedStudents = localStorage.getItem('students');
-    const students = savedStudents ? JSON.parse(savedStudents) : [];
+    const studentCount = students.length;
     const newRows = rows + 1;
     const newDeskCount = newRows * cols;
     
-    if (newDeskCount < students.length) {
+    if (newDeskCount < studentCount) {
       showNotification('Not enough desks for every student!', 'error');
       return;
     }
@@ -348,12 +401,11 @@ export default function ClassroomPage() {
   };
 
   const handleAddCol = () => {
-    const savedStudents = localStorage.getItem('students');
-    const students = savedStudents ? JSON.parse(savedStudents) : [];
+    const studentCount = students.length;
     const newCols = cols + 1;
     const newDeskCount = rows * newCols;
     
-    if (newDeskCount < students.length) {
+    if (newDeskCount < studentCount) {
       showNotification('Not enough desks for every student!', 'error');
       return;
     }

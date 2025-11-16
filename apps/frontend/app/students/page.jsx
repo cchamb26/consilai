@@ -5,33 +5,46 @@ import { useState, useEffect } from 'react';
 import StudentCard from '../../components/StudentCard';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import { mockStudents } from '../../lib/mockData';
 import { ProtectedRoute } from '../../lib/ProtectedRoute';
+import { getSupabaseClient } from '../../lib/supabaseClient';
 
 export default function StudentsPage() {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Load students from localStorage on mount
+  // Load students from Supabase on mount
   useEffect(() => {
-    const savedStudents = localStorage.getItem('students');
-    if (savedStudents) {
-      setStudents(JSON.parse(savedStudents));
-    } else {
-      setStudents(mockStudents);
-      localStorage.setItem('students', JSON.stringify(mockStudents));
-    }
+    const fetchStudents = async () => {
+      try {
+        const supabase = getSupabaseClient();
+        // RLS ensures we only see the current teacher's students
+        const { data, error } = await supabase
+          .from('teacher_students')
+          .select('*')
+          .order('created_at', { ascending: true });
+
+        if (error) {
+          console.error('Error fetching students:', error);
+          setError('Failed to load students');
+          setStudents([]);
+        } else {
+          setStudents(data || []);
+        }
+      } catch (err) {
+        console.error('Unexpected error fetching students:', err);
+        setError('Failed to load students');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
   }, []);
 
-  // Save students to localStorage whenever they change
-  useEffect(() => {
-    if (students.length > 0) {
-      localStorage.setItem('students', JSON.stringify(students));
-    }
-  }, [students]);
-
-  const filteredStudents = students.filter(student => {
+  const filteredStudents = students.filter((student) => {
     const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          student.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesGrade = selectedGrade === '' || student.grade === selectedGrade;
@@ -39,10 +52,25 @@ export default function StudentsPage() {
   });
 
   // Get unique grades for filter
-  // const uniqueGrades = [...new Set(students.map(s => s.grade))].sort();
   // K–12 grade sort
-const gradeOrder = ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5", "Grade 6", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"];
-const uniqueGrades = [...new Set(students.map(s => s.grade))].sort((a, b) => gradeOrder.indexOf(a) - gradeOrder.indexOf(b));
+  const gradeOrder = [
+    'Kindergarten',
+    'Grade 1',
+    'Grade 2',
+    'Grade 3',
+    'Grade 4',
+    'Grade 5',
+    'Grade 6',
+    'Grade 7',
+    'Grade 8',
+    'Grade 9',
+    'Grade 10',
+    'Grade 11',
+    'Grade 12',
+  ];
+  const uniqueGrades = [...new Set(students.map((s) => s.grade))].sort(
+    (a, b) => gradeOrder.indexOf(a) - gradeOrder.indexOf(b),
+  );
 
   return (
     <ProtectedRoute>
@@ -102,10 +130,16 @@ const uniqueGrades = [...new Set(students.map(s => s.grade))].sort((a, b) => gra
 
         {/* Students Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStudents.length > 0 ? (
-            filteredStudents.map(student => (
-              <StudentCard key={student.id} student={student} />
-            ))
+          {loading ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-slate-500 text-lg">Loading students...</p>
+            </div>
+          ) : error ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-red-400 text-lg">{error}</p>
+            </div>
+          ) : filteredStudents.length > 0 ? (
+            filteredStudents.map((student) => <StudentCard key={student.id} student={student} />)
           ) : (
             <div className="col-span-full text-center py-12">
               <p className="text-slate-500 text-lg">
