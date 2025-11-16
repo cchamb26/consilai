@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import StudentDetailPanel from '../../../components/StudentDetailPanel';
 import Button from '../../../components/Button';
@@ -12,6 +13,7 @@ export default function StudentDetailPage({ params }) {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const router = useRouter();
   
   useEffect(() => {
     const fetchStudent = async () => {
@@ -124,7 +126,7 @@ export default function StudentDetailPage({ params }) {
                 <Button 
                   variant="primary" 
                   onClick={() => {
-                    alert('Plan generated! (Demo mode)');
+                    router.push(`/plans?studentId=${student.id}`);
                     setShowPlanModal(false);
                   }}
                 >

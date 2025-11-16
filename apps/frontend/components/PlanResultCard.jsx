@@ -50,7 +50,7 @@ function MilestoneAccordionItem({ milestone, index }) {
       </button>
 
       {hasDetails && open && (
-        <div className="px-8 pb-4 pt-1 bg-surface-light dark:bg-surface-dark/70 border-t border-border dark:border-white/10">
+        <div className="px-8 pb-4 pt-1 bg-surface-light dark:bg-surface-dark/60 border-t border-border dark:border-white/10 transition-colors">
           <ul className="list-disc space-y-1 text-sm text-text-primary-light dark:text-text-primary-dark ml-4">
             {milestone.details.map((step, idx) => (
               <li key={idx}>{step}</li>
@@ -146,11 +146,11 @@ export default function PlanResultCard({
 
         {/* Sources used */}
         {sources.length > 0 && (
-          <div className="rounded-2xl border border-border dark:border-white/10 bg-surface-light/70 dark:bg-surface-dark/70 overflow-hidden transition-colors">
+          <div className="rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 overflow-hidden transition-colors">
             <button
               type="button"
               onClick={() => setSourcesOpen((prev) => !prev)}
-              className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-primary-50/60 dark:hover:bg-primary-900/40 transition-colors"
+              className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-surface-light/80 dark:hover:bg-surface-dark transition-colors"
             >
               <span className="text-sm uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark">
                 🔗 Sources Used
@@ -165,20 +165,18 @@ export default function PlanResultCard({
             </button>
 
             {sourcesOpen && (
-              <div className="px-4 pb-4 pt-1 border-t border-border dark:border-white/10">
+              <div className="px-4 pb-4 pt-1 bg-surface-light dark:bg-surface-dark/60 border-t border-border dark:border-white/10 transition-colors">
                 <ul className="space-y-2 text-sm text-text-primary-light dark:text-text-primary-dark">
                   {sources.map((src, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-primary-400 dark:bg-primary-500" />
+                      <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-text-secondary-light dark:bg-text-secondary-dark" />
                       <div>
                         <a
                           href={src.url || '#'}
                           target="_blank"
                           rel="noreferrer"
                           className={`hover:text-primary-600 dark:hover:text-primary-300 ${
-                            src.url
-                              ? 'underline decoration-primary-400/70'
-                              : ''
+                            src.url ? 'underline decoration-text-secondary-light/70 dark:decoration-text-secondary-dark/70' : ''
                           }`}
                         >
                           {src.title || 'Untitled source'}
