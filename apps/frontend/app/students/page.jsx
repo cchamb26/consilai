@@ -74,15 +74,15 @@ export default function StudentsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-950 py-16">
+      <div className="min-h-screen bg-background-light dark:bg-background-dark py-16 transition-colors">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Header */}
         <div className="mb-12">
           <div className="flex flex-wrap items-center gap-4 justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Profiles</p>
-              <h1 className="text-4xl font-semibold text-white mt-2">Students</h1>
-              <p className="text-slate-400 mt-2">Every student context in one calm view.</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-text-secondary-light dark:text-text-secondary-dark">Profiles</p>
+              <h1 className="text-4xl font-semibold text-text-primary-light dark:text-text-primary-dark mt-2">Students</h1>
+              <p className="text-text-secondary-light dark:text-text-secondary-dark mt-2">Every student context in one calm view.</p>
             </div>
             <Link href="/students/new">
               <Button variant="primary" size="lg">
@@ -102,13 +102,13 @@ export default function StudentsPage() {
               />
             </div>
             <div className="min-w-xs">
-              <label className="block text-sm font-medium text-slate-200 mb-2">
+              <label className="block text-sm font-medium text-text-primary-light dark:text-text-primary-dark mb-2">
                 Filter by Grade
               </label>
               <select
                 value={selectedGrade}
                 onChange={(e) => setSelectedGrade(e.target.value)}
-                className="px-4 py-2 border border-slate-700 rounded-lg bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="px-4 py-2 border border-border dark:border-slate-700 rounded-lg bg-surface-light dark:bg-surface-dark text-text-primary-light dark:text-text-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
               >
                 <option value="">All Grades</option>
                 {uniqueGrades.map(grade => (
@@ -132,7 +132,7 @@ export default function StudentsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading ? (
             <div className="col-span-full text-center py-12">
-              <p className="text-slate-500 text-lg">Loading students...</p>
+              <p className="text-text-secondary-light dark:text-text-secondary-dark text-lg">Loading students...</p>
             </div>
           ) : error ? (
             <div className="col-span-full text-center py-12">
@@ -142,7 +142,7 @@ export default function StudentsPage() {
             filteredStudents.map((student) => <StudentCard key={student.id} student={student} />)
           ) : (
             <div className="col-span-full text-center py-12">
-              <p className="text-slate-500 text-lg">
+              <p className="text-text-secondary-light dark:text-text-secondary-dark text-lg">
                 No students found {searchTerm && `matching "${searchTerm}"`}{searchTerm && selectedGrade && ' in'}{selectedGrade && ` ${selectedGrade}`}
               </p>
             </div>
@@ -156,11 +156,11 @@ export default function StudentsPage() {
 
 function StatCard({ label, value, icon }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+    <div className="rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-6 transition-colors">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs uppercase tracking-wide text-slate-500">{label}</p>
-          <p className="text-3xl font-semibold text-white mt-2">{value}</p>
+          <p className="text-xs uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark">{label}</p>
+          <p className="text-3xl font-semibold text-text-primary-light dark:text-text-primary-dark mt-2">{value}</p>
         </div>
         <span className="text-3xl">{icon}</span>
       </div>

@@ -1,0 +1,82 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.class_occurrences (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  teacher_id uuid NOT NULL DEFAULT auth.uid(),
+  classroom_id uuid NOT NULL,
+  prompt text NOT NULL,
+  ai_result jsonb,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT class_occurrences_pkey PRIMARY KEY (id),
+  CONSTRAINT class_occurrences_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES auth.users(id),
+  CONSTRAINT class_occurrences_classroom_id_fkey FOREIGN KEY (classroom_id) REFERENCES public.classrooms(id)
+);
+CREATE TABLE public.classrooms (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  teacher_id uuid NOT NULL DEFAULT auth.uid(),
+  name text NOT NULL,
+  description text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT classrooms_pkey PRIMARY KEY (id),
+  CONSTRAINT classrooms_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES auth.users(id)
+);
+CREATE TABLE public.plans (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  teacher_id uuid NOT NULL DEFAULT auth.uid(),
+  student_id uuid,
+  title text NOT NULL,
+  objectives text,
+  start_date date,
+  end_date date,
+  status text,
+  milestones ARRAY DEFAULT '{}'::text[],
+  custom_prompt text,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT plans_pkey PRIMARY KEY (id),
+  CONSTRAINT plans_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES auth.users(id),
+  CONSTRAINT plans_student_id_fkey FOREIGN KEY (student_id) REFERENCES public.students(id)
+);
+CREATE TABLE public.student_occurrence_students (
+  student_occurrence_id uuid NOT NULL,
+  student_id uuid NOT NULL,
+  CONSTRAINT student_occurrence_students_pkey PRIMARY KEY (student_occurrence_id, student_id),
+  CONSTRAINT student_occurrence_students_student_occurrence_id_fkey FOREIGN KEY (student_occurrence_id) REFERENCES public.student_occurrences(id),
+  CONSTRAINT student_occurrence_students_student_id_fkey FOREIGN KEY (student_id) REFERENCES public.students(id)
+);
+CREATE TABLE public.student_occurrences (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  teacher_id uuid NOT NULL DEFAULT auth.uid(),
+  classroom_id uuid NOT NULL,
+  prompt text NOT NULL,
+  ai_result jsonb,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT student_occurrences_pkey PRIMARY KEY (id),
+  CONSTRAINT student_occurrences_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES auth.users(id),
+  CONSTRAINT student_occurrences_classroom_id_fkey FOREIGN KEY (classroom_id) REFERENCES public.classrooms(id)
+);
+CREATE TABLE public.students (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  teacher_id uuid NOT NULL DEFAULT auth.uid(),
+  classroom_id uuid NOT NULL,
+  name text NOT NULL,
+  grade text,
+  age integer,
+  behavioral_notes text,
+  seat_row integer,
+  seat_col integer,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  email text,
+  issues ARRAY DEFAULT '{}'::text[],
+  strengths ARRAY DEFAULT '{}'::text[],
+  goals ARRAY DEFAULT '{}'::text[],
+  avatar text,
+  CONSTRAINT students_pkey PRIMARY KEY (id),
+  CONSTRAINT students_teacher_id_fkey FOREIGN KEY (teacher_id) REFERENCES auth.users(id),
+  CONSTRAINT students_classroom_id_fkey FOREIGN KEY (classroom_id) REFERENCES public.classrooms(id)
+);

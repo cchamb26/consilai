@@ -27,14 +27,14 @@ export default function Login() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-950">
-        <div className="text-slate-300">Loading...</div>
+      <div className="flex items-center justify-center min-h-screen bg-background-light dark:bg-background-dark transition-colors">
+        <div className="text-text-secondary-light dark:text-text-secondary-dark">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-950">
+    <div className="flex items-center justify-center min-h-screen bg-background-light dark:bg-background-dark transition-colors">
       <div className="w-full max-w-md space-y-8 px-4">
         {redirected && (
           <div className="bg-red-500 text-white rounded-lg px-4 py-3 text-sm font-medium">
@@ -43,14 +43,14 @@ export default function Login() {
         )}
         
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-slate-100">Welcome to ConsilAI</h1>
-          <p className="text-slate-400">Sign in to your account to continue</p>
+          <h1 className="text-4xl font-bold text-text-primary-light dark:text-text-primary-dark">Welcome to ConsilAI</h1>
+          <p className="text-text-secondary-light dark:text-text-secondary-dark">Sign in to your account to continue</p>
         </div>
 
         <div className="space-y-4">
           <button
             onClick={handleGoogleSignIn}
-            className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition"
+            className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-surface-light dark:bg-surface-dark text-text-primary-light dark:text-text-primary-dark rounded-lg font-semibold hover:bg-primary-50 dark:hover:bg-primary-900 transition border border-border dark:border-slate-700"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -74,7 +74,7 @@ export default function Login() {
           </button>
         </div>
 
-        <div className="text-center text-sm text-slate-400">
+        <div className="text-center text-sm text-text-secondary-light dark:text-text-secondary-dark">
           <p>By signing in, you agree to our Terms of Service and Privacy Policy</p>
         </div>
       </div>

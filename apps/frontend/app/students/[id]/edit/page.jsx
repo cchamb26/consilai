@@ -87,8 +87,8 @@ export default function EditStudentPage({ params }) {
   if (loading) {
     return (
       <ProtectedRoute>
-        <div className="flex items-center justify-center min-h-screen bg-slate-950">
-          <div className="text-slate-300">Loading...</div>
+        <div className="flex items-center justify-center min-h-screen bg-background-light dark:bg-background-dark transition-colors">
+          <div className="text-text-secondary-light dark:text-text-secondary-dark">Loading...</div>
         </div>
       </ProtectedRoute>
     );
@@ -97,8 +97,8 @@ export default function EditStudentPage({ params }) {
   if (error) {
     return (
       <ProtectedRoute>
-        <div className="flex items-center justify-center min-h-screen bg-slate-950">
-          <div className="text-slate-300">Error: {error}</div>
+        <div className="flex items-center justify-center min-h-screen bg-background-light dark:bg-background-dark transition-colors">
+          <div className="text-text-secondary-light dark:text-text-secondary-dark">Error: {error}</div>
         </div>
       </ProtectedRoute>
     );
@@ -107,10 +107,10 @@ export default function EditStudentPage({ params }) {
   if (!student) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-slate-950 py-16">
+        <div className="min-h-screen bg-background-light dark:bg-background-dark py-16 transition-colors">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-            <h1 className="text-2xl font-semibold text-white">Student not found</h1>
-            <Link href="/students" className="text-indigo-300 hover:text-white transition inline-block">
+            <h1 className="text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark">Student not found</h1>
+            <Link href="/students" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition inline-block">
               Back to Students
             </Link>
           </div>
@@ -121,22 +121,22 @@ export default function EditStudentPage({ params }) {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-950 py-16">
+      <div className="min-h-screen bg-background-light dark:bg-background-dark py-16 transition-colors">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           {/* Breadcrumb */}
-          <div className="flex items-center space-x-2 text-sm text-slate-500">
-            <Link href="/" className="hover:text-white transition">Home</Link>
+          <div className="flex items-center space-x-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+            <Link href="/" className="hover:text-text-primary-light dark:hover:text-text-primary-dark transition">Home</Link>
             <span>/</span>
-            <Link href="/students" className="hover:text-white transition">Students</Link>
+            <Link href="/students" className="hover:text-text-primary-light dark:hover:text-text-primary-dark transition">Students</Link>
             <span>/</span>
-            <Link href={`/students/${params.id}`} className="hover:text-white transition">{student.name}</Link>
+            <Link href={`/students/${params.id}`} className="hover:text-text-primary-light dark:hover:text-text-primary-dark transition">{student.name}</Link>
             <span>/</span>
-            <span className="text-slate-300">Edit</span>
+            <span className="text-text-primary-light dark:text-text-primary-dark">Edit</span>
           </div>
 
           <StudentForm onSubmit={handleSubmit} initialData={student} />
 
-          <div className="pt-4 border-t border-slate-800 flex justify-end">
+          <div className="pt-4 border-t border-border dark:border-slate-800 flex justify-end">
             <Button
               variant="secondary"
               type="button"

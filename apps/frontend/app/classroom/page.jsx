@@ -206,7 +206,7 @@ export default function ClassroomPage() {
     };
 
     init();
-  }, [rows, cols]);
+  }, []); // Only run once on mount, not when rows/cols change
 
   const handleSave = () => {
     const seatingData = {
@@ -508,22 +508,22 @@ export default function ClassroomPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-950 py-16">
+      <div className="min-h-screen bg-background-light dark:bg-background-dark py-16 transition-colors">
         <div className="w-full px-4 sm:px-6 lg:px-8 space-y-12" style={{ maxWidth: '100%' }}>
           {/* Header */}
           <div className="space-y-8 max-w-6xl mx-auto">
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Spatial Intelligence</p>
-              <h1 className="text-4xl font-semibold text-white mt-2">🪑 Classroom Simulation</h1>
-              <p className="text-slate-400 text-lg mt-4">
+              <p className="text-xs uppercase tracking-[0.4em] text-text-secondary-light dark:text-text-secondary-dark">Spatial Intelligence</p>
+              <h1 className="text-4xl font-semibold text-text-primary-light dark:text-text-primary-dark mt-2">🪑 Classroom Simulation</h1>
+              <p className="text-text-secondary-light dark:text-text-secondary-dark text-lg mt-4">
                 Drag, drop, and sculpt seating plans that reflect behavior and collaboration goals.
               </p>
             </div>
 
             {/* Instructions */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <p className="font-semibold text-white">📝 How to use</p>
-              <ul className="text-sm text-slate-400 mt-3 space-y-1 ml-4 list-disc">
+            <div className="rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-6 transition-colors">
+              <p className="font-semibold text-text-primary-light dark:text-text-primary-dark">📝 How to use</p>
+              <ul className="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-3 space-y-1 ml-4 list-disc">
                 <li>Drag a student card onto any desk—empty desks highlight automatically.</li>
                 <li>Save captures the current layout; Reset reverts to the saved arrangement.</li>
                 <li>Occupancy stats update live so you stay in control.</li>
@@ -568,30 +568,60 @@ export default function ClassroomPage() {
 
           {/* Analytics Panel */}
           {showAnalytics && (
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 max-w-6xl mx-auto">
-              <h3 className="text-xl font-semibold text-white mb-6">Student Analytics</h3>
+            <div className="rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-6 max-w-6xl mx-auto transition-colors">
+              <h3 className="text-xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-6">Student Analytics</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
                 {desks.map(desk => desk.student && (
-                  <div key={desk.student.id} className="rounded-lg bg-slate-800 p-4 border border-white/10">
+                  <div key={desk.student.id} className="rounded-lg bg-primary-50 dark:bg-primary-900/30 p-4 border border-border dark:border-white/10 transition-colors">
                     <div className="flex items-start gap-3 mb-3">
-                      <span className="text-2xl">{desk.student.avatar}</span>
+                      <span className="text-2xl">{desk.student.avatar || '👤'}</span>
                       <div>
-                        <p className="font-semibold text-white">{desk.student.name}</p>
-                        <p className="text-xs text-slate-400">{desk.student.grade}</p>
+                        <p className="font-semibold text-text-primary-light dark:text-text-primary-dark">{desk.student.name}</p>
+                        <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">{desk.student.grade}</p>
                       </div>
                     </div>
-                    <div className="space-y-2 text-xs">
+                    <div className="space-y-3 text-xs">
                       <div>
-                        <p className="text-slate-400">Issues:</p>
-                        <p className="text-slate-300">{desk.student.issues?.slice(0, 2).join(', ') || 'None'}</p>
+                        <p className="text-text-secondary-light dark:text-text-secondary-dark mb-1.5 font-semibold">Focus Areas:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {(Array.isArray(desk.student.issues) ? desk.student.issues : []).length > 0 ? (
+                            (Array.isArray(desk.student.issues) ? desk.student.issues : []).map((issue, idx) => (
+                              <span key={idx} className="px-1.5 py-0.5 rounded-full bg-rose-500/20 dark:bg-rose-500/30 text-rose-700 dark:text-rose-300 border border-rose-500/40 dark:border-rose-500/50 text-[10px]">
+                                {issue}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-text-secondary-light dark:text-text-secondary-dark">None</span>
+                          )}
+                        </div>
                       </div>
                       <div>
-                        <p className="text-slate-400">Strengths:</p>
-                        <p className="text-slate-300">{desk.student.strengths?.slice(0, 2).join(', ') || 'None'}</p>
+                        <p className="text-text-secondary-light dark:text-text-secondary-dark mb-1.5 font-semibold">Strengths:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {(Array.isArray(desk.student.strengths) ? desk.student.strengths : []).length > 0 ? (
+                            (Array.isArray(desk.student.strengths) ? desk.student.strengths : []).map((strength, idx) => (
+                              <span key={idx} className="px-1.5 py-0.5 rounded-full bg-primary-200/50 dark:bg-primary-900/60 text-primary-800 dark:text-primary-200 border border-primary-400/50 dark:border-primary-700/50 text-[10px]">
+                                {strength}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-text-secondary-light dark:text-text-secondary-dark">None</span>
+                          )}
+                        </div>
                       </div>
                       <div>
-                        <p className="text-slate-400">Learning Goals:</p>
-                        <p className="text-slate-300">{desk.student.goals?.slice(0, 2).join(', ') || 'None'}</p>
+                        <p className="text-text-secondary-light dark:text-text-secondary-dark mb-1.5 font-semibold">Learning Goals:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {(Array.isArray(desk.student.goals) ? desk.student.goals : []).length > 0 ? (
+                            (Array.isArray(desk.student.goals) ? desk.student.goals : []).map((goal, idx) => (
+                              <span key={idx} className="px-1.5 py-0.5 rounded-full bg-secondary-200/50 dark:bg-secondary-900/60 text-secondary-800 dark:text-secondary-200 border border-secondary-400/50 dark:border-secondary-700/50 text-[10px]">
+                                {goal}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-text-secondary-light dark:text-text-secondary-dark">None</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -626,12 +656,12 @@ export default function ClassroomPage() {
 
 function Tip({ icon, title, description }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+    <div className="rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-6 transition-colors">
       <div className="flex items-start space-x-3">
         <span className="text-2xl">{icon}</span>
         <div>
-          <h3 className="font-semibold text-white">{title}</h3>
-          <p className="text-sm text-slate-400 mt-1">{description}</p>
+          <h3 className="font-semibold text-text-primary-light dark:text-text-primary-dark">{title}</h3>
+          <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mt-1">{description}</p>
         </div>
       </div>
     </div>

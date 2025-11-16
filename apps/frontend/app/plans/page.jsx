@@ -116,13 +116,13 @@ export default function PlansPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-950 py-16">
+      <div className="min-h-screen bg-background-light dark:bg-background-dark py-16 transition-colors">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 space-y-3">
-          <p className="text-xs uppercase tracking-[0.4em] text-slate-500">Plans</p>
-          <h1 className="text-4xl font-semibold text-white">🤖 AI Plan Generator</h1>
-          <p className="text-slate-400 text-lg">
+          <p className="text-xs uppercase tracking-[0.4em] text-text-secondary-light dark:text-text-secondary-dark">Plans</p>
+          <h1 className="text-4xl font-semibold text-text-primary-light dark:text-text-primary-dark">🤖 AI Plan Generator</h1>
+          <p className="text-text-secondary-light dark:text-text-secondary-dark text-lg">
             Generate personalized learning plans powered by AI and backend-curated research—no uploads or manual inputs needed.
           </p>
         </div>
@@ -130,22 +130,22 @@ export default function PlansPage() {
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left: Form */}
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur">
-            <h2 className="text-2xl font-semibold text-white mb-2">Plan Parameters</h2>
-            <p className="text-sm text-slate-400 mb-6">
+          <div className="rounded-3xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-8 backdrop-blur transition-colors">
+            <h2 className="text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">Plan Parameters</h2>
+            <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-6">
               After you complete a student profile, ConsilAI automatically extracts key terms, scrapes relevant research, and summarizes findings in the backend. Select a student below and optionally add any extra instructions.
             </p>
 
             <div className="space-y-6">
               {/* Student Selection */}
               <div>
-                <label className="block text-sm font-medium text-slate-200 mb-2">
+                <label className="block text-sm font-medium text-text-primary-light dark:text-text-primary-dark mb-2">
                   Select Student *
                 </label>
                 <select
                   value={selectedStudent}
                   onChange={(e) => setSelectedStudent(e.target.value)}
-                  className="wfull px-4 py-2 border border-white/10 rounded-lg bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 border border-border dark:border-white/10 rounded-lg bg-surface-light dark:bg-surface-dark text-text-primary-light dark:text-text-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
                 >
                   <option value="">
                     {loadingStudents
@@ -186,9 +186,9 @@ export default function PlansPage() {
               </Button>
 
               {/* Tips */}
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="font-semibold text-white text-sm mb-2">💡 Tips</p>
-                <ul className="text-xs text-slate-400 space-y-1">
+              <div className="rounded-2xl border border-border dark:border-white/10 bg-primary-50 dark:bg-primary-900/30 p-4 transition-colors">
+                <p className="font-semibold text-text-primary-light dark:text-text-primary-dark text-sm mb-2">💡 Tips</p>
+                <ul className="text-xs text-text-secondary-light dark:text-text-secondary-dark space-y-1">
                   <li>• AI considers student issues, strengths, and goals</li>
                   <li>• Backend research scraping runs automatically per student</li>
                   <li>• Plans are 90 days with weekly milestones</li>
@@ -215,12 +215,12 @@ export default function PlansPage() {
                 </Button>
               </>
             ) : (
-              <div className="rounded-3xl border border-dashed border-white/15 bg-white/5 p-12 h-full flex flex-col items-center justify-center text-center">
+              <div className="rounded-3xl border border-dashed border-border dark:border-white/15 bg-surface-light dark:bg-surface-dark/50 p-12 h-full flex flex-col items-center justify-center text-center transition-colors">
                 <span className="text-6xl mb-4">📋</span>
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="text-xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">
                   {selectedStudent ? 'Ready to Generate' : 'Select a Student'}
                 </h3>
-                <p className="text-slate-400 text-sm max-w-sm">
+                <p className="text-text-secondary-light dark:text-text-secondary-dark text-sm max-w-sm">
                   {selectedStudent
                     ? 'Click "Generate Plan" to create a personalized learning plan powered by AI.'
                     : 'Choose a student from the form to generate their personalized learning plan.'
@@ -233,7 +233,7 @@ export default function PlansPage() {
 
         {/* Example Plans Section */}
         <div className="mt-14">
-          <h2 className="text-2xl font-semibold text-white mb-6">📚 Example Plans</h2>
+          <h2 className="text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-6">📚 Example Plans</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {mockPlans.map((plan) => (
               <button
@@ -247,11 +247,11 @@ export default function PlansPage() {
                     studentName: 'Example Student',
                   });
                 }}
-                className="text-left rounded-2xl border border-white/10 bg-white/5 p-6 hover:border-indigo-400 hover:bg-white/10 transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="text-left rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-6 hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
-                <h3 className="font-semibold text-white mb-2">{plan.title}</h3>
-                <p className="text-sm text-slate-400 mb-4">{plan.objectives}</p>
-                <div className="flex items-center justify-between text-xs text-slate-500 uppercase tracking-wide">
+                <h3 className="font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">{plan.title}</h3>
+                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-4">{plan.objectives}</p>
+                <div className="flex items-center justify-between text-xs text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wide">
                   <span>
                     {plan.startDate} — {plan.endDate}
                   </span>

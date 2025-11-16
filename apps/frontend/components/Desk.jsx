@@ -45,10 +45,12 @@ export default function Desk({ desk, onDragStart, onDrop, onDragOver }) {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={`
-        p-5 rounded-2xl border flex flex-col items-center justify-center gap-2
+        p-5 rounded-2xl border-2 flex flex-col items-center justify-center gap-2
         min-h-28 cursor-move transition-all duration-300
-        ${desk.student ? 'bg-white/5 border-white/15 hover:bg-white/10' : 'border-dashed border-white/10 bg-transparent hover:border-white/30'}
-        ${isDragOver ? 'border-indigo-400 bg-indigo-500/10 scale-[1.02]' : ''}
+        ${desk.student 
+          ? 'bg-white dark:bg-primary-900/30 border-primary-400 dark:border-white/15 hover:bg-primary-100 dark:hover:bg-primary-900/50 shadow-md' 
+          : 'border-dashed border-primary-300 dark:border-white/10 bg-white/50 dark:bg-transparent hover:border-primary-500 dark:hover:border-white/30 hover:bg-primary-50 dark:hover:bg-primary-900/20'}
+        ${isDragOver ? 'border-primary-600 dark:border-primary-400 bg-primary-300/70 dark:bg-primary-500/20 scale-[1.02] shadow-lg' : ''}
       `}
     >
       {desk.student ? (
@@ -59,18 +61,18 @@ export default function Desk({ desk, onDragStart, onDrop, onDragOver }) {
             size="md"
             className="mb-2"
           />
-          <p className="text-center text-sm font-semibold text-white">
+          <p className="text-center text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">
             {desk.student.name}
           </p>
-          <p className="text-xs text-slate-400">{desk.id}</p>
-          <p className="text-xs text-slate-500">({row + 1}, {col + 1})</p>
+          <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">{desk.id}</p>
+          <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">({row + 1}, {col + 1})</p>
         </>
       ) : (
         <>
-          <span className="text-3xl text-slate-700 mb-1">🪑</span>
-          <p className="text-xs text-slate-500 text-center">{desk.id}</p>
-          <p className="text-xs text-slate-600 mt-1">({row + 1}, {col + 1})</p>
-          <p className="text-xs text-slate-600 mt-1">Drop student here</p>
+          <span className="text-3xl text-text-secondary-light dark:text-text-secondary-dark mb-1">🪑</span>
+          <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark text-center">{desk.id}</p>
+          <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">({row + 1}, {col + 1})</p>
+          <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">Drop student here</p>
         </>
       )}
     </div>

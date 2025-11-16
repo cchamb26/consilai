@@ -2,62 +2,62 @@ import Button from './Button';
 
 export default function PlanResultCard({ plan, studentName }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden backdrop-blur">
+    <div className="rounded-3xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 overflow-hidden backdrop-blur transition-colors">
       {/* Header */}
-      <div className="p-6 border-b border-white/10 flex flex-col gap-2">
-        <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Plan Ready</p>
-        <h3 className="text-2xl font-semibold text-white">{plan.title}</h3>
-        <p className="text-sm text-slate-400">Personalized for {studentName}</p>
+      <div className="p-6 border-b border-border dark:border-white/10 flex flex-col gap-2">
+        <p className="text-xs uppercase tracking-[0.3em] text-text-secondary-light dark:text-text-secondary-dark">Plan Ready</p>
+        <h3 className="text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark">{plan.title}</h3>
+        <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">Personalized for {studentName}</p>
       </div>
 
       {/* Body */}
       <div className="p-6 space-y-8">
         {/* Objectives */}
         <div>
-          <h4 className="text-sm uppercase tracking-wide text-slate-400 mb-2">🎯 Focus</h4>
-          <p className="text-base text-slate-100 leading-relaxed">{plan.objectives}</p>
+          <h4 className="text-sm uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark mb-2">🎯 Focus</h4>
+          <p className="text-base text-text-primary-light dark:text-text-primary-dark leading-relaxed">{plan.objectives}</p>
         </div>
 
         {/* Timeline */}
         <div className="grid grid-cols-3 gap-4">
-          <div className="rounded-2xl border border-white/10 p-4">
-            <p className="text-xs uppercase tracking-wide text-slate-500">Start</p>
-            <p className="text-lg font-semibold text-white mt-1">{plan.startDate}</p>
+          <div className="rounded-2xl border border-border dark:border-white/10 p-4 bg-primary-50 dark:bg-primary-900/30 transition-colors">
+            <p className="text-xs uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark">Start</p>
+            <p className="text-lg font-semibold text-text-primary-light dark:text-text-primary-dark mt-1">{plan.startDate}</p>
           </div>
-          <div className="rounded-2xl border border-white/10 p-4">
-            <p className="text-xs uppercase tracking-wide text-slate-500">End</p>
-            <p className="text-lg font-semibold text-white mt-1">{plan.endDate}</p>
+          <div className="rounded-2xl border border-border dark:border-white/10 p-4 bg-primary-50 dark:bg-primary-900/30 transition-colors">
+            <p className="text-xs uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark">End</p>
+            <p className="text-lg font-semibold text-text-primary-light dark:text-text-primary-dark mt-1">{plan.endDate}</p>
           </div>
-          <div className="rounded-2xl border border-white/10 p-4">
-            <p className="text-xs uppercase tracking-wide text-slate-500">Status</p>
-            <p className="text-lg font-semibold text-emerald-300 mt-1">{plan.status}</p>
+          <div className="rounded-2xl border border-border dark:border-white/10 p-4 bg-primary-50 dark:bg-primary-900/30 transition-colors">
+            <p className="text-xs uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark">Status</p>
+            <p className="text-lg font-semibold text-emerald-500 dark:text-emerald-400 mt-1">{plan.status}</p>
           </div>
         </div>
 
         {/* Milestones */}
         <div>
-          <h4 className="text-sm uppercase tracking-wide text-slate-400 mb-3">📋 Milestones</h4>
+          <h4 className="text-sm uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark mb-3">📋 Milestones</h4>
           <ul className="space-y-3">
             {plan.milestones.map((milestone, idx) => (
-              <li key={idx} className="flex items-start gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
-                <span className="mt-1 h-2 w-2 rounded-full bg-indigo-400" />
-                <span className="text-slate-200 text-sm leading-relaxed">{milestone}</span>
+              <li key={idx} className="flex items-start gap-3 p-3 rounded-2xl bg-primary-50 dark:bg-primary-900/30 border border-border dark:border-white/10 transition-colors">
+                <span className="mt-1 h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+                <span className="text-text-primary-light dark:text-text-primary-dark text-sm leading-relaxed">{milestone}</span>
               </li>
             ))}
           </ul>
         </div>
 
         {/* AI Insights (placeholder) */}
-        <div className="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-4">
-          <p className="text-sm font-semibold text-white mb-2">🤖 AI Insights</p>
-          <p className="text-sm text-indigo-100">
+        <div className="rounded-2xl border border-primary-400/30 dark:border-primary-500/40 bg-primary-100/50 dark:bg-primary-900/30 p-4 transition-colors">
+          <p className="text-sm font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">🤖 AI Insights</p>
+          <p className="text-sm text-primary-700 dark:text-primary-300">
             Generated by combining student context with continuously refreshed research summaries. Progress check-ins recalibrate the plan over time.
           </p>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 flex gap-2 border-t border-white/10 bg-slate-950/50">
+      <div className="px-6 py-4 flex gap-2 border-t border-border dark:border-white/10 bg-background-light dark:bg-background-dark/50 transition-colors">
         <Button variant="success" size="sm">Save Plan</Button>
         <Button variant="outline" size="sm">Edit</Button>
         <Button variant="secondary" size="sm">Download PDF</Button>

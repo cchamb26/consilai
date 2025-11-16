@@ -61,11 +61,11 @@ export default function StudentForm({ onSubmit, initialData = null }) {
                          formData.goals?.trim();
 
   return (
-    <form onSubmit={handleSubmit} className="bg-slate-900/80 backdrop-blur rounded-2xl shadow-2xl border border-slate-800 p-8 max-w-2xl">
-      <h2 className="text-2xl font-bold mb-2 text-white">
+    <form onSubmit={handleSubmit} className="bg-surface-light dark:bg-surface-dark/80 backdrop-blur rounded-2xl shadow-2xl border border-border dark:border-slate-800 p-8 max-w-2xl transition-colors">
+      <h2 className="text-2xl font-bold mb-2 text-text-primary-light dark:text-text-primary-dark">
         {initialData ? 'Edit Student' : 'Add New Student'}
       </h2>
-      <p className="text-sm text-slate-400 mb-6">
+      <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-6">
         Capture student context and let ConsilAI handle the research behind the scenes.
       </p>
 
@@ -93,14 +93,14 @@ export default function StudentForm({ onSubmit, initialData = null }) {
 
         {/* Grade */}
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-2">
+          <label className="block text-sm font-medium text-text-primary-light dark:text-text-primary-dark mb-2">
             Grade Level
           </label>
           <select
             name="grade"
             value={formData.grade}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-slate-700 rounded-lg bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 border border-border dark:border-slate-700 rounded-lg bg-surface-light dark:bg-surface-dark text-text-primary-light dark:text-text-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
           >
             <option>Kindergarten</option>
             <option>Grade 1</option>
@@ -150,7 +150,7 @@ export default function StudentForm({ onSubmit, initialData = null }) {
 
         {/* Avatar/Emoji Selector */}
         <div>
-          <label className="block text-sm font-medium text-slate-200 mb-3">
+          <label className="block text-sm font-medium text-text-primary-light dark:text-text-primary-dark mb-3">
             Student Avatar
           </label>
           <div className="grid grid-cols-8 gap-2">
@@ -161,8 +161,8 @@ export default function StudentForm({ onSubmit, initialData = null }) {
                 onClick={() => setFormData(prev => ({ ...prev, avatar: emoji }))}
                 className={`text-3xl p-3 rounded-lg transition ${
                   formData.avatar === emoji
-                    ? 'bg-indigo-500 scale-110'
-                    : 'bg-slate-800 hover:bg-slate-700'
+                    ? 'bg-primary-500 dark:bg-primary-600 scale-110'
+                    : 'bg-primary-100 dark:bg-primary-900 hover:bg-primary-200 dark:hover:bg-primary-800'
                 }`}
               >
                 {emoji}

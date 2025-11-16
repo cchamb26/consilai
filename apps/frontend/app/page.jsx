@@ -13,7 +13,7 @@ export default function Home() {
       description: 'All profiles, history, and context surfaced instantly.',
       icon: '👥',
       href: '/students',
-      accent: 'from-cyan-500 to-blue-500',
+      accent: 'from-primary-400 to-secondary-400',
     },
     {
       id: 2,
@@ -21,7 +21,7 @@ export default function Home() {
       description: 'Design seating layouts that adapt to behavior and goals.',
       icon: '🪑',
       href: '/classroom',
-      accent: 'from-purple-500 to-indigo-500',
+      accent: 'from-secondary-400 to-primary-400',
     },
     {
       id: 3,
@@ -29,7 +29,7 @@ export default function Home() {
       description: 'Generate personalized plans backed by hidden research.',
       icon: '🤖',
       href: '/plans',
-      accent: 'from-amber-400 to-rose-400',
+      accent: 'from-primary-300 to-secondary-300',
     },
   ];
 
@@ -53,18 +53,15 @@ export default function Home() {
 
   return (
     <ProtectedRoute>
-      <div className="bg-slate-950 text-slate-100">
-        {/* Greeting */}
-        <Greeting />
-
+      <div className="bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark transition-colors">
       {/* Hero Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="space-y-8">
-          <p className="text-sm uppercase tracking-[0.4em] text-slate-500">ConsilAI</p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight">
+          <p className="text-sm uppercase tracking-[0.4em] text-text-secondary-light dark:text-text-secondary-dark">ConsilAI</p>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight text-text-primary-light dark:text-text-primary-dark">
             A calm command center for every student, every classroom, every plan.
           </h1>
-          <p className="text-lg text-slate-400 max-w-3xl">
+          <p className="text-lg text-text-secondary-light dark:text-text-secondary-dark max-w-3xl">
             ConsilAI pairs elegant tooling with invisible research automation. Profile students, shape classrooms, and deliver AI plans that feel handcrafted—without exposing the complexity underneath.
           </p>
           <div className="flex flex-wrap gap-3">
@@ -87,13 +84,13 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {features.map((feature) => (
             <Link key={feature.id} href={feature.href} className="group">
-              <div className="h-full rounded-3xl border border-white/10 bg-white/5 p-6 hover:border-white/30 transition">
+              <div className="h-full rounded-3xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-6 hover:border-primary-400 dark:hover:border-primary-500 transition">
                 <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.accent} flex items-center justify-center text-2xl mb-6`}>
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-sm text-slate-400 mb-6">{feature.description}</p>
-                <span className="text-sm text-slate-300 group-hover:text-white transition">
+                <h3 className="text-xl font-semibold mb-2 text-text-primary-light dark:text-text-primary-dark">{feature.title}</h3>
+                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-6">{feature.description}</p>
+                <span className="text-sm text-primary-600 dark:text-primary-400 group-hover:text-primary-700 dark:group-hover:text-primary-300 transition">
                   Open →
                 </span>
               </div>
@@ -104,11 +101,11 @@ export default function Home() {
 
       {/* How It Works */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="rounded-3xl border border-white/10 bg-white/5 p-10 space-y-10">
+        <div className="rounded-3xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-10 space-y-10 transition-colors">
           <div className="space-y-3">
-            <p className="text-sm uppercase tracking-[0.4em] text-slate-500">Flow</p>
-            <h2 className="text-3xl font-semibold">Research stays hidden. The experience stays effortless.</h2>
-            <p className="text-slate-400 max-w-3xl">
+            <p className="text-sm uppercase tracking-[0.4em] text-text-secondary-light dark:text-text-secondary-dark">Flow</p>
+            <h2 className="text-3xl font-semibold text-text-primary-light dark:text-text-primary-dark">Research stays hidden. The experience stays effortless.</h2>
+            <p className="text-text-secondary-light dark:text-text-secondary-dark max-w-3xl">
                Every plan is powered by quiet automation you never have to manage.
             </p>
           </div>
@@ -128,11 +125,11 @@ export default function Home() {
 
       {/* CTA */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-500/30 via-slate-900 to-slate-950 p-10 flex flex-col gap-6">
+        <div className="rounded-3xl border border-border dark:border-white/10 bg-gradient-to-br from-primary-200/50 dark:from-primary-500/30 via-secondary-100/50 dark:via-primary-900 to-surface-light dark:to-background-dark p-10 flex flex-col gap-6 transition-colors">
           <div className="space-y-4">
-            <p className="text-sm uppercase tracking-[0.4em] text-indigo-200">Start</p>
-            <h3 className="text-3xl font-semibold">Orchestrate every student journey from one calm interface.</h3>
-            <p className="text-slate-200 max-w-2xl">
+            <p className="text-sm uppercase tracking-[0.4em] text-primary-600 dark:text-primary-300">Start</p>
+            <h3 className="text-3xl font-semibold text-text-primary-light dark:text-text-primary-dark">Orchestrate every student journey from one calm interface.</h3>
+            <p className="text-text-secondary-light dark:text-text-secondary-dark max-w-2xl">
               Students, classrooms, plans—kept in sync with zero clutter. ConsilAI keeps research invisible so you can focus on decisions, not documentation.
             </p>
           </div>
@@ -157,10 +154,10 @@ export default function Home() {
 
 function Step({ number, title, description }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-6 h-full flex flex-col items-center text-center gap-3">
-      <span className="text-xs uppercase tracking-[0.4em] text-slate-500">{number}</span>
-      <h4 className="text-lg font-semibold text-white">{title}</h4>
-      <p className="text-sm text-slate-400">{description}</p>
+    <div className="rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-6 h-full flex flex-col items-center text-center gap-3 transition-colors">
+      <span className="text-xs uppercase tracking-[0.4em] text-text-secondary-light dark:text-text-secondary-dark">{number}</span>
+      <h4 className="text-lg font-semibold text-text-primary-light dark:text-text-primary-dark">{title}</h4>
+      <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">{description}</p>
     </div>
   );
 }

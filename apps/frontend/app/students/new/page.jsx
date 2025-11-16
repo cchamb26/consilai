@@ -83,15 +83,15 @@ export default function NewStudentPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-950 py-16" key={"new-student"}>
+      <div className="min-h-screen bg-background-light dark:bg-background-dark py-16 transition-colors" key={"new-student"}>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Breadcrumb */}
-        <div className="flex items-center space-x-2 text-sm text-slate-500">
-          <Link href="/" className="hover:text-white transition">Home</Link>
+        <div className="flex items-center space-x-2 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+          <Link href="/" className="hover:text-text-primary-light dark:hover:text-text-primary-dark transition">Home</Link>
           <span>/</span>
-          <Link href="/students" className="hover:text-white transition">Students</Link>
+          <Link href="/students" className="hover:text-text-primary-light dark:hover:text-text-primary-dark transition">Students</Link>
           <span>/</span>
-          <span className="text-slate-300">New</span>
+          <span className="text-text-primary-light dark:text-text-primary-dark">New</span>
         </div>
 
         <StudentForm onSubmit={handleSubmit} />

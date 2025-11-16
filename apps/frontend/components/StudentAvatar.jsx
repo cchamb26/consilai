@@ -13,14 +13,14 @@ export default function StudentAvatar({
   return (
     <div
       className={`
-        flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 via-blue-500 to-cyan-400
-        text-white font-semibold shadow-lg shadow-indigo-900/50
+        flex items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-secondary-400
+        text-white font-semibold shadow-lg shadow-primary-900/30 dark:shadow-primary-900/50
         ${sizes[size]}
         ${className}
       `}
       title={name}
     >
-      {avatar}
+      {avatar || '👤'}
     </div>
   );
 }
