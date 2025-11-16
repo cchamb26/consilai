@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Desk from './Desk';
 
-export default function DeskGrid({ initialDesks }) {
+export default function DeskGrid({ initialDesks, onDesksChange, cols = 4 }) {
   const [desks, setDesks] = useState(initialDesks);
   const [draggedStudent, setDraggedStudent] = useState(null);
 
@@ -11,12 +11,18 @@ export default function DeskGrid({ initialDesks }) {
     setDesks(initialDesks);
   }, [initialDesks]);
 
+  // Notify parent component when desks change
+  useEffect(() => {
+    if (onDesksChange) {
+      onDesksChange(desks);
+    }
+  }, [desks, onDesksChange]);
+
   const handleDragStart = (student) => {
     setDraggedStudent(student);
   };
 
   const handleDrop = (targetDesk, studentId) => {
-    // Find the student from any desk
     let draggedStudentData = null;
     let sourceDeskIndex = -1;
 
@@ -30,26 +36,38 @@ export default function DeskGrid({ initialDesks }) {
 
     if (!draggedStudentData) return;
 
-    // Create new desks array
     const newDesks = [...desks];
-    
-    // Remove from source desk
-    if (sourceDeskIndex >= 0) {
-      newDesks[sourceDeskIndex] = {
-        ...newDesks[sourceDeskIndex],
-        student: null,
-        available: true,
-      };
-    }
-
-    // Find target desk index and add student
     const targetDeskIndex = newDesks.findIndex(d => d.id === targetDesk.id);
+    
     if (targetDeskIndex >= 0) {
-      newDesks[targetDeskIndex] = {
-        ...newDesks[targetDeskIndex],
-        student: draggedStudentData,
-        available: false,
-      };
+      // If target desk has a student, swap them
+      if (newDesks[targetDeskIndex].student && sourceDeskIndex >= 0) {
+        const targetStudent = newDesks[targetDeskIndex].student;
+        newDesks[sourceDeskIndex] = {
+          ...newDesks[sourceDeskIndex],
+          student: targetStudent,
+          available: false,
+        };
+        newDesks[targetDeskIndex] = {
+          ...newDesks[targetDeskIndex],
+          student: draggedStudentData,
+          available: false,
+        };
+      } else {
+        // Otherwise, just move the student
+        if (sourceDeskIndex >= 0) {
+          newDesks[sourceDeskIndex] = {
+            ...newDesks[sourceDeskIndex],
+            student: null,
+            available: true,
+          };
+        }
+        newDesks[targetDeskIndex] = {
+          ...newDesks[targetDeskIndex],
+          student: draggedStudentData,
+          available: false,
+        };
+      }
     }
 
     setDesks(newDesks);
@@ -75,16 +93,18 @@ export default function DeskGrid({ initialDesks }) {
         )}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {desks.map((desk) => (
-          <Desk
-            key={desk.id}
-            desk={desk}
-            onDragStart={handleDragStart}
-            onDrop={handleDrop}
-            onDragOver={handleDragOver}
-          />
-        ))}
+      <div className="overflow-x-auto w-full">
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, minmax(120px, 1fr))`, gap: '1rem', minWidth: 'fit-content' }}>
+          {desks.map((desk) => (
+            <Desk
+              key={desk.id}
+              desk={desk}
+              onDragStart={handleDragStart}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Stats */}

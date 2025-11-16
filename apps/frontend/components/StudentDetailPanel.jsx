@@ -14,7 +14,7 @@ export default function StudentDetailPanel({ student, onEditPlan }) {
             <p className="text-sm text-slate-500 mt-1">{student.grade}</p>
           </div>
         </div>
-        <Button variant="outline">Edit Profile</Button>
+        {/* <Button variant="outline">Edit Profile</Button> */}
       </div>
 
       {/* Content Grid */}
