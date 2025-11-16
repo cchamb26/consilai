@@ -1,19 +1,71 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../../components/Button';
 import Textarea from '../../components/Textarea';
 import PlanResultCard from '../../components/PlanResultCard';
-import { mockStudents, mockPlans } from '../../lib/mockData';
+import { mockPlans } from '../../lib/mockData';
 import { ProtectedRoute } from '../../lib/ProtectedRoute';
+import { getSupabaseClient } from '../../lib/supabaseClient';
 
 export default function PlansPage() {
+  const [students, setStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState('');
   const [customPrompt, setCustomPrompt] = useState('');
   const [generatedPlan, setGeneratedPlan] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [loadingStudents, setLoadingStudents] = useState(true);
+  const [studentError, setStudentError] = useState(null);
 
-  const student = mockStudents.find(s => s.id === selectedStudent);
+  const student = students.find((s) => s.id === selectedStudent);
+
+  // Fetch students for the current teacher from Supabase
+  useEffect(() => {
+    const supabase = getSupabaseClient();
+
+    const fetchStudents = async () => {
+      setLoadingStudents(true);
+      try {
+        const { data, error } = await supabase
+          .from('teacher_students')
+          .select('*')
+          .order('created_at', { ascending: true });
+
+        if (error) {
+          console.error('Error fetching students for plans:', error);
+          setStudentError('Failed to load students');
+          setStudents([]);
+        } else {
+          setStudents(data || []);
+          setStudentError(null);
+        }
+      } catch (err) {
+        console.error('Unexpected error fetching students for plans:', err);
+        setStudentError('Failed to load students');
+        setStudents([]);
+      } finally {
+        setLoadingStudents(false);
+      }
+    };
+
+    fetchStudents();
+
+    // Optional: listen for real-time student changes so the list updates
+    const channel = supabase
+      .channel('plans-students-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'students' },
+        () => {
+          fetchStudents();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleGenerate = async () => {
     if (!selectedStudent) {
@@ -21,21 +73,36 @@ export default function PlansPage() {
       return;
     }
 
+    if (!student) {
+      alert('Selected student could not be loaded. Please try again.');
+      return;
+    }
+
     setIsGenerating(true);
-    
-    // Simulate API call
+
+    // Simulate API call (replace with real AI plan generation API)
     setTimeout(() => {
+      const firstStrength =
+        Array.isArray(student.strengths) && student.strengths.length > 0
+          ? student.strengths[0]
+          : 'their strengths';
+      const firstIssue =
+        Array.isArray(student.issues) && student.issues.length > 0
+          ? student.issues[0]
+          : 'their current challenges';
+
       const mockGeneratedPlan = {
         id: Date.now(),
         studentId: selectedStudent,
+        studentName: student.name,
         title: 'Personalized Learning Plan',
-        objectives: `This plan focuses on developing ${student.strengths[0]} while addressing ${student.issues[0]}. The curriculum automatically incorporates backend research summaries and personalized strategies tailored to ${student.name}'s unique profile.`,
+        objectives: `This plan focuses on developing ${firstStrength} while addressing ${firstIssue}. The curriculum automatically incorporates backend research summaries and personalized strategies tailored to ${student.name}'s unique profile.`,
         startDate: new Date().toISOString().split('T')[0],
         endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'Generated',
         milestones: [
-          `Week 1-2: Assess current baseline for "${student.issues[0]}"`,
-          `Week 3-4: Implement peer mentoring sessions leveraging "${student.strengths[0]}"`,
+          `Week 1-2: Assess current baseline for "${firstIssue}"`,
+          `Week 3-4: Implement peer mentoring sessions leveraging "${firstStrength}"`,
           `Week 5-8: Progressive skill building with weekly check-ins`,
           `Week 9-12: Evaluation and plan refinement based on progress`,
           `Celebrate progress and plan next phases`,
@@ -78,14 +145,23 @@ export default function PlansPage() {
                 <select
                   value={selectedStudent}
                   onChange={(e) => setSelectedStudent(e.target.value)}
-                  className="w-full px-4 py-2 border border-white/10 rounded-lg bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="wfull px-4 py-2 border border-white/10 rounded-lg bg-slate-900 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">Choose a student...</option>
-                  {mockStudents.map(student => (
-                    <option key={student.id} value={student.id}>
-                      {student.name} - {student.grade}
-                    </option>
-                  ))}
+                  <option value="">
+                    {loadingStudents
+                      ? 'Loading students...'
+                      : studentError
+                        ? 'Error loading students'
+                        : students.length === 0
+                          ? 'No students yet — create one first'
+                          : 'Choose a student...'}
+                  </option>
+                  {!loadingStudents && !studentError &&
+                    students.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name} - {s.grade}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -127,7 +203,7 @@ export default function PlansPage() {
               <>
                 <PlanResultCard
                   plan={generatedPlan}
-                  studentName={student?.name || 'Selected Student'}
+                  studentName={generatedPlan.studentName || student?.name || 'Selected Student'}
                 />
                 <Button
                   variant="secondary"
@@ -159,8 +235,20 @@ export default function PlansPage() {
         <div className="mt-14">
           <h2 className="text-2xl font-semibold text-white mb-6">📚 Example Plans</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {mockPlans.map(plan => (
-              <div key={plan.id} className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            {mockPlans.map((plan) => (
+              <button
+                key={plan.id}
+                type="button"
+                onClick={() => {
+                  setSelectedStudent('');
+                  setGeneratedPlan({
+                    ...plan,
+                    studentId: '',
+                    studentName: 'Example Student',
+                  });
+                }}
+                className="text-left rounded-2xl border border-white/10 bg-white/5 p-6 hover:border-indigo-400 hover:bg-white/10 transition focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
                 <h3 className="font-semibold text-white mb-2">{plan.title}</h3>
                 <p className="text-sm text-slate-400 mb-4">{plan.objectives}</p>
                 <div className="flex items-center justify-between text-xs text-slate-500 uppercase tracking-wide">
@@ -169,7 +257,7 @@ export default function PlansPage() {
                   </span>
                   <span className="text-amber-300">{plan.status}</span>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
