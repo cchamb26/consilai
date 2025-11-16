@@ -34,9 +34,12 @@ export async function fetchResearchForStudent(
   const keywords = extractStudentKeywords(student);
   const query = buildQueryFromKeywords(student, keywords);
 
+  // Resolve the scraper relative to the monorepo root instead of __dirname,
+  // so it works both in Next.js (.next/server/...) and when run from packages/ai.
   const scriptPath = path.resolve(
-    __dirname,
-    "../../scraper/src/scrapers/scraper.py",
+    process.cwd(),
+    "../..",
+    "packages/scraper/src/scrapers/scraper.py",
   );
 
   return new Promise<ResearchSnippet[]>((resolve, reject) => {

@@ -57,31 +57,38 @@ def scrape_urls(query: str, num_results: int = 5) -> List[str]:
     return urls
 
 
-def get_top_texts(query: str, num_results: int = 5) -> List[str]:
+def get_top_texts_with_urls(query: str, num_results: int = 5) -> List[Dict[str, str]]:
+    """
+    Return a list of dicts with both the URL and scraped text content.
+    This preserves the URL so it can be surfaced back to the frontend.
+    """
     urls = scrape_urls(query, num_results=num_results)
-    texts: List[str] = []
+    results: List[Dict[str, str]] = []
     for url in urls:
         try:
-            texts.append(scrape_page_text(url))
+            text = scrape_page_text(url)
+            results.append({"url": url, "text": text})
         except Exception:
             # Skip URLs that fail to scrape
             continue
-    return texts
+    return results
 
 
 def build_snippets_from_query(query: str, num_results: int = 5) -> List[Dict[str, Any]]:
     """Return a list of dicts shaped similarly to ResearchSnippet for consumption by Node."""
-    texts = get_top_texts(query, num_results=num_results)
+    pages = get_top_texts_with_urls(query, num_results=num_results)
     tokens = [t for t in query.split(" ") if t]
 
     snippets: List[Dict[str, Any]] = []
-    for i, text in enumerate(texts):
+    for i, page in enumerate(pages):
+        text = page["text"]
+        url = page["url"]
         snippets.append(
             {
                 "id": f"scraped-{i+1}",
                 "title": f"Result {i+1} for '{query}'",
                 "source": "web",
-                "url": "",  # could be extended to include the actual URL
+                "url": url,
                 "abstract": text[:400],
                 "summary": text[:1600],
                 "tags": tokens[:8],
