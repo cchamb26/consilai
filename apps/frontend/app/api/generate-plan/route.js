@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import {
   fetchResearchForStudent,
   generateShortTermPlan,
-} from '../../../../../packages/ai/dist/index.js';
+} from '../../../../../packages/ai/src/index';
 
 export async function POST(request) {
   try {
