@@ -100,7 +100,7 @@ export default function PlansPage() {
         return;
       }
 
-      const { plan } = await response.json();
+      const { plan, sources } = await response.json();
 
       const aiGeneratedPlan = {
         id: Date.now(),
@@ -116,8 +116,24 @@ export default function PlansPage() {
           .split('T')[0],
         status: 'Generated',
         milestones: Array.isArray(plan.segments)
-          ? plan.segments.map((seg) => `${seg.weekLabel}: ${seg.focus}`)
+          ? plan.segments.map((seg, index) => {
+              const teacherSteps = Array.isArray(seg.teacherActions)
+                ? seg.teacherActions.filter(Boolean)
+                : [];
+
+              const details =
+                teacherSteps.length >= 3
+                  ? teacherSteps.slice(0, 6)
+                  : teacherSteps;
+
+              return {
+                title: `${seg.weekLabel}: ${seg.focus}`,
+                details,
+                _segmentIndex: index,
+              };
+            })
           : [],
+        sources: Array.isArray(sources) ? sources : [],
       };
 
       setGeneratedPlan(aiGeneratedPlan);

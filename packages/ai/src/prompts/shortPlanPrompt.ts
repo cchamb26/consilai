@@ -42,10 +42,10 @@ Output a JSON object with this shape:
   "segments": [
     {
       "weekLabel": "Weeks 1–2",
-      "focus": string,
-      "teacherActions": string[],
-      "studentActions": string[],
-      "checkIns": string[]
+      "focus": string,                    // short, 1-line focus
+      "teacherActions": string[],         // 3–6 highly specific teacher actions
+      "studentActions": string[],         // optional: brief student-facing expectations
+      "checkIns": string[]                // optional: concrete progress checks
     }
   ],
   "notesForTeacher": string
@@ -54,6 +54,9 @@ Output a JSON object with this shape:
 Constraints:
 - Duration MUST be ${durationWeeks} weeks.
 - Keep the plan concise and easy to read for a busy teacher.
+- For EACH segment, provide 3–6 concise, classroom-ready action steps focused on
+  what the TEACHER will do. Put these in teacherActions.
+- You may optionally include brief studentActions and checkIns, but keep them short.
 - Focus on strategies that can be evaluated within this ${durationWeeks}-week window.
 - Do NOT include any explanation outside the JSON.
 `;

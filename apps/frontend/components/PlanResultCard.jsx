@@ -1,6 +1,72 @@
+import { useState } from 'react';
 import Button from './Button';
 
+function normalizeMilestones(milestones = []) {
+  return milestones.map((m) => {
+    if (typeof m === 'string') {
+      return { title: m, details: [] };
+    }
+    return {
+      title: m.title || '',
+      details: Array.isArray(m.details) ? m.details : [],
+    };
+  });
+}
+
+function MilestoneAccordionItem({ milestone, index }) {
+  const [open, setOpen] = useState(false);
+  const hasDetails = milestone.details && milestone.details.length > 0;
+
+  const toggle = () => {
+    if (hasDetails) {
+      setOpen((prev) => !prev);
+    }
+  };
+
+  return (
+    <li
+      className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
+    >
+      <button
+        type="button"
+        onClick={toggle}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-white/10 transition"
+      >
+        <div className="flex items-start gap-3">
+          <span className="mt-1 h-2 w-2 rounded-full bg-indigo-400" />
+          <span className="text-slate-200 text-sm leading-relaxed">
+            {milestone.title || `Milestone ${index + 1}`}
+          </span>
+        </div>
+        {hasDetails && (
+          <span
+            className={`text-xs text-slate-400 transition-transform ${
+              open ? 'rotate-90' : ''
+            }`}
+          >
+            ▶
+          </span>
+        )}
+      </button>
+
+      {hasDetails && open && (
+        <div className="px-8 pb-4 pt-1 bg-slate-950/40 border-t border-white/10">
+          <ul className="list-disc space-y-1 text-sm text-slate-200 ml-4">
+            {milestone.details.map((step, idx) => (
+              <li key={idx}>{step}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </li>
+  );
+}
+
 export default function PlanResultCard({ plan, studentName }) {
+  const normalized = normalizeMilestones(plan.milestones || []);
+  const sources = Array.isArray(plan.sources) ? plan.sources : [];
+  const [sourcesOpen, setSourcesOpen] = useState(false);
+
   return (
     <div className="rounded-3xl border border-white/10 bg-white/5 overflow-hidden backdrop-blur">
       {/* Header */}
@@ -38,14 +104,66 @@ export default function PlanResultCard({ plan, studentName }) {
         <div>
           <h4 className="text-sm uppercase tracking-wide text-slate-400 mb-3">📋 Milestones</h4>
           <ul className="space-y-3">
-            {plan.milestones.map((milestone, idx) => (
-              <li key={idx} className="flex items-start gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
-                <span className="mt-1 h-2 w-2 rounded-full bg-indigo-400" />
-                <span className="text-slate-200 text-sm leading-relaxed">{milestone}</span>
-              </li>
+            {normalized.map((milestone, idx) => (
+              <MilestoneAccordionItem
+                key={idx}
+                milestone={milestone}
+                index={idx}
+              />
             ))}
           </ul>
         </div>
+
+        {/* Sources used */}
+        {sources.length > 0 && (
+          <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setSourcesOpen((prev) => !prev)}
+              className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-white/10 transition"
+            >
+              <span className="text-sm uppercase tracking-wide text-slate-400">
+                🔗 Sources Used
+              </span>
+              <span
+                className={`text-xs text-slate-400 transition-transform ${
+                  sourcesOpen ? 'rotate-90' : ''
+                }`}
+              >
+                ▶
+              </span>
+            </button>
+
+            {sourcesOpen && (
+              <div className="px-4 pb-4 pt-1 bg-slate-950/40 border-t border-white/10">
+                <ul className="space-y-2 text-sm text-slate-200">
+                  {sources.map((src, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-slate-500" />
+                      <div>
+                        <a
+                          href={src.url || '#'}
+                          target="_blank"
+                          rel="noreferrer"
+                          className={`hover:text-indigo-300 ${
+                            src.url ? 'underline decoration-slate-500/70' : ''
+                          }`}
+                        >
+                          {src.title || 'Untitled source'}
+                        </a>
+                        {src.source && (
+                          <p className="text-xs text-slate-500">
+                            {src.source}
+                          </p>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* AI Insights (placeholder) */}
         <div className="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-4">

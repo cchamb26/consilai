@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
-import { generateShortTermPlanWithScraper } from '../../../../packages/ai/dist/index.js';
+import {
+  fetchResearchForStudent,
+  generateShortTermPlan,
+} from '../../../../../packages/ai/dist/index.js';
 
 export async function POST(request) {
   try {
@@ -38,12 +41,23 @@ export async function POST(request) {
         .join(' '),
     };
 
-    const plan = await generateShortTermPlanWithScraper({
+    const research = await fetchResearchForStudent(studentProfile);
+
+    const plan = await generateShortTermPlan({
       student: studentProfile,
+      research,
       durationWeeks,
     });
 
-    return NextResponse.json({ plan });
+    const sources = research
+      .filter((snippet) => snippet && snippet.url && snippet.url.length > 0)
+      .map((snippet) => ({
+        title: snippet.title,
+        url: snippet.url,
+        source: snippet.source,
+      }));
+
+    return NextResponse.json({ plan, sources });
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error('[api/generate-plan] Error:', err);
