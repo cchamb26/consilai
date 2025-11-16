@@ -14,6 +14,7 @@ export default function PlansPage() {
   const [customPrompt, setCustomPrompt] = useState('');
   const [generatedPlan, setGeneratedPlan] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isSavingPlan, setIsSavingPlan] = useState(false);
   const [loadingStudents, setLoadingStudents] = useState(true);
   const [studentError, setStudentError] = useState(null);
 
@@ -145,6 +146,123 @@ export default function PlansPage() {
     }
   };
 
+  const handleSavePlan = async () => {
+    if (!generatedPlan) return;
+
+    // Example plans are not persisted
+    const isExample = !generatedPlan.studentId;
+    if (isExample) {
+      alert('Example plans are for demonstration only and are not saved to Supabase.');
+      return;
+    }
+
+    try {
+      setIsSavingPlan(true);
+      const supabase = getSupabaseClient();
+
+      const payload = {
+        student_id: generatedPlan.studentId || null,
+        title: generatedPlan.title,
+        objectives: generatedPlan.objectives,
+        start_date: generatedPlan.startDate || null,
+        end_date: generatedPlan.endDate || null,
+        status: generatedPlan.status || 'Generated',
+        milestones: Array.isArray(generatedPlan.milestones)
+          ? generatedPlan.milestones
+          : [],
+        custom_prompt: customPrompt || null,
+      };
+
+      if (generatedPlan.planId) {
+        // Update existing plan
+        const { data, error } = await supabase
+          .from('plans')
+          .update(payload)
+          .eq('id', generatedPlan.planId)
+          .select('*')
+          .single();
+
+        if (error) {
+          console.error('Error updating plan:', error);
+          alert('Failed to update plan. Please try again.');
+        } else {
+          setGeneratedPlan((prev) => ({ ...prev, ...data, planId: data.id }));
+          alert('Plan updated successfully.');
+        }
+      } else {
+        // Insert new plan
+        const { data, error } = await supabase
+          .from('plans')
+          .insert(payload)
+          .select('*')
+          .single();
+
+        if (error) {
+          console.error('Error saving plan:', error);
+          alert('Failed to save plan. Please try again.');
+        } else {
+          setGeneratedPlan((prev) => ({
+            ...prev,
+            ...data,
+            planId: data.id,
+          }));
+          alert('Plan saved successfully.');
+        }
+      }
+    } catch (err) {
+      console.error('Unexpected error saving plan:', err);
+      alert('Failed to save plan. Please try again.');
+    } finally {
+      setIsSavingPlan(false);
+    }
+  };
+
+  const handleDownloadCsv = () => {
+    if (!generatedPlan) return;
+
+    const rows = [];
+    rows.push(['Field', 'Value']);
+    rows.push(['Title', generatedPlan.title || '']);
+    rows.push(['Student', generatedPlan.studentName || student?.name || '']);
+    rows.push(['Status', generatedPlan.status || '']);
+    rows.push(['Start Date', generatedPlan.startDate || '']);
+    rows.push(['End Date', generatedPlan.endDate || '']);
+    rows.push(['Objectives', (generatedPlan.objectives || '').replace(/\n/g, ' ')]);
+    rows.push(['Custom Prompt', (customPrompt || '').replace(/\n/g, ' ')]);
+
+    if (Array.isArray(generatedPlan.milestones) && generatedPlan.milestones.length > 0) {
+      rows.push([]);
+      rows.push(['Milestones', '']);
+      generatedPlan.milestones.forEach((m, index) => {
+        rows.push([`Step ${index + 1}`, (m || '').replace(/\n/g, ' ')]);
+      });
+    }
+
+    const csvContent = rows
+      .map((cols) =>
+        cols
+          .map((c) => {
+            const s = String(c ?? '');
+            const needsQuotes = s.includes(',') || s.includes('"') || s.includes('\n');
+            const escaped = s.replace(/"/g, '""');
+            return needsQuotes ? `"${escaped}"` : escaped;
+          })
+          .join(','),
+      )
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const filenameSafeTitle = (generatedPlan.title || 'plan').replace(/[^a-z0-9]+/gi, '-');
+    link.href = url;
+    link.setAttribute('download', `${filenameSafeTitle || 'plan'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-background-light dark:bg-background-dark py-16 transition-colors">
@@ -235,6 +353,9 @@ export default function PlansPage() {
                 <PlanResultCard
                   plan={generatedPlan}
                   studentName={generatedPlan.studentName || student?.name || 'Selected Student'}
+                  onSave={handleSavePlan}
+                  onDownloadCsv={handleDownloadCsv}
+                  isSaving={isSavingPlan}
                 />
                 <Button
                   variant="secondary"

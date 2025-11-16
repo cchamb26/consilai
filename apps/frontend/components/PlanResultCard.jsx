@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Button from './Button';
 
+<<<<<<< HEAD
 function normalizeMilestones(milestones = []) {
   return milestones.map((m) => {
     if (typeof m === 'string') {
@@ -23,6 +24,15 @@ function MilestoneAccordionItem({ milestone, index }) {
     }
   };
 
+=======
+export default function PlanResultCard({
+  plan,
+  studentName,
+  onSave,
+  onDownloadCsv,
+  isSaving = false,
+}) {
+>>>>>>> 053c3c0 (I got rid of the edit button for plans and made it so we generate CSVs instead of PDFs.)
   return (
     <li
       className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
@@ -80,8 +90,15 @@ export default function PlanResultCard({ plan, studentName }) {
       <div className="p-6 space-y-8">
         {/* Objectives */}
         <div>
+<<<<<<< HEAD
           <h4 className="text-sm uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark mb-2">🎯 Focus</h4>
           <p className="text-base text-text-primary-light dark:text-text-primary-dark leading-relaxed">{plan.objectives}</p>
+=======
+          <h4 className="text-sm uppercase tracking-wide text-slate-400 mb-2">🎯 Focus</h4>
+          <p className="text-base text-slate-100 leading-relaxed whitespace-pre-wrap">
+            {plan.objectives}
+          </p>
+>>>>>>> 053c3c0 (I got rid of the edit button for plans and made it so we generate CSVs instead of PDFs.)
         </div>
 
         {/* Timeline */}
@@ -183,10 +200,29 @@ export default function PlanResultCard({ plan, studentName }) {
       </div>
 
       {/* Footer */}
+<<<<<<< HEAD
       <div className="px-6 py-4 flex gap-2 border-t border-border dark:border-white/10 bg-background-light dark:bg-background-dark/50 transition-colors">
         <Button variant="success" size="sm">Save Plan</Button>
         <Button variant="outline" size="sm">Edit</Button>
         <Button variant="secondary" size="sm">Download PDF</Button>
+=======
+      <div className="px-6 py-4 flex gap-2 border-t border-white/10 bg-slate-950/50">
+        <Button
+          variant="success"
+          size="sm"
+          disabled={isSaving || !onSave}
+          onClick={onSave}
+        >
+          {isSaving ? 'Saving…' : 'Save Plan'}
+        </Button>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={onDownloadCsv}
+        >
+          Download CSV
+        </Button>
+>>>>>>> 053c3c0 (I got rid of the edit button for plans and made it so we generate CSVs instead of PDFs.)
       </div>
     </div>
   );
