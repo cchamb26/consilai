@@ -42,8 +42,15 @@ export async function fetchResearchForStudent(
     "packages/scraper/src/scrapers/scraper.py",
   );
 
+  // Use the venv's python3 interpreter
+  const venvPythonPath = path.resolve(
+    process.cwd(),
+    "../..",
+    "packages/scraper/venv/bin/python3",
+  );
+
   return new Promise<ResearchSnippet[]>((resolve, reject) => {
-    const proc = spawn("python", [scriptPath, query], {
+    const proc = spawn(venvPythonPath, [scriptPath, query], {
       stdio: ["ignore", "pipe", "pipe"],
     });
 

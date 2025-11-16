@@ -21,6 +21,17 @@ apps/frontend/node_modules
 .yarn/build-state.yml
 .yarn/install-state.gz
 
+# Python
+venv/
+.venv/
+**/venv/
+**/.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
 # Testing
 coverage/
 .nyc_output/
