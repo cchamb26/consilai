@@ -34,6 +34,9 @@ export default function Desk({ desk, onDragStart, onDrop, onDragOver }) {
     onDrop?.(desk, studentId);
   };
 
+  const row = desk.position?.y ?? 0;
+  const col = desk.position?.x ?? 0;
+
   return (
     <div
       draggable={!!desk.student}
@@ -57,14 +60,16 @@ export default function Desk({ desk, onDragStart, onDrop, onDragOver }) {
             className="mb-2"
           />
           <p className="text-center text-sm font-semibold text-white">
-            {desk.student.name.split(' ')[0]}
+            {desk.student.name}
           </p>
           <p className="text-xs text-slate-400">{desk.id}</p>
+          <p className="text-xs text-slate-500">({row + 1}, {col + 1})</p>
         </>
       ) : (
         <>
           <span className="text-3xl text-slate-700 mb-1">🪑</span>
           <p className="text-xs text-slate-500 text-center">{desk.id}</p>
+          <p className="text-xs text-slate-600 mt-1">({row + 1}, {col + 1})</p>
           <p className="text-xs text-slate-600 mt-1">Drop student here</p>
         </>
       )}
