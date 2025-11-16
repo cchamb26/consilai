@@ -25,22 +25,22 @@ function MilestoneAccordionItem({ milestone, index }) {
 
   return (
     <li
-      className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
+      className="rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 overflow-hidden transition-colors"
     >
       <button
         type="button"
         onClick={toggle}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-white/10 transition"
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-surface-light/80 dark:hover:bg-surface-dark transition-colors"
       >
         <div className="flex items-start gap-3">
-          <span className="mt-1 h-2 w-2 rounded-full bg-indigo-400" />
-          <span className="text-slate-200 text-sm leading-relaxed">
+          <span className="mt-1 h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400" />
+          <span className="text-text-primary-light dark:text-text-primary-dark text-sm leading-relaxed">
             {milestone.title || `Milestone ${index + 1}`}
           </span>
         </div>
         {hasDetails && (
           <span
-            className={`text-xs text-slate-400 transition-transform ${
+            className={`text-xs text-text-secondary-light dark:text-text-secondary-dark transition-transform ${
               open ? 'rotate-90' : ''
             }`}
           >
@@ -50,8 +50,8 @@ function MilestoneAccordionItem({ milestone, index }) {
       </button>
 
       {hasDetails && open && (
-        <div className="px-8 pb-4 pt-1 bg-slate-950/40 border-t border-white/10">
-          <ul className="list-disc space-y-1 text-sm text-slate-200 ml-4">
+        <div className="px-8 pb-4 pt-1 bg-surface-light dark:bg-surface-dark/60 border-t border-border dark:border-white/10 transition-colors">
+          <ul className="list-disc space-y-1 text-sm text-text-primary-light dark:text-text-primary-dark ml-4">
             {milestone.details.map((step, idx) => (
               <li key={idx}>{step}</li>
             ))}
@@ -104,37 +104,29 @@ export default function PlanResultCard({ plan, studentName }) {
         <div>
           <h4 className="text-sm uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark mb-3">📋 Milestones</h4>
           <ul className="space-y-3">
-<<<<<<< HEAD
-            {plan.milestones.map((milestone, idx) => (
-              <li key={idx} className="flex items-start gap-3 p-3 rounded-2xl bg-primary-50 dark:bg-primary-900/30 border border-border dark:border-white/10 transition-colors">
-                <span className="mt-1 h-2 w-2 rounded-full bg-primary-500 dark:bg-primary-400" />
-                <span className="text-text-primary-light dark:text-text-primary-dark text-sm leading-relaxed">{milestone}</span>
-              </li>
-=======
             {normalized.map((milestone, idx) => (
               <MilestoneAccordionItem
                 key={idx}
                 milestone={milestone}
                 index={idx}
               />
->>>>>>> 2883977db3f647a6b8cb70072086d8f31d3936a3
             ))}
           </ul>
         </div>
 
         {/* Sources used */}
         {sources.length > 0 && (
-          <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+          <div className="rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 overflow-hidden transition-colors">
             <button
               type="button"
               onClick={() => setSourcesOpen((prev) => !prev)}
-              className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-white/10 transition"
+              className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-surface-light/80 dark:hover:bg-surface-dark transition-colors"
             >
-              <span className="text-sm uppercase tracking-wide text-slate-400">
+              <span className="text-sm uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark">
                 🔗 Sources Used
               </span>
               <span
-                className={`text-xs text-slate-400 transition-transform ${
+                className={`text-xs text-text-secondary-light dark:text-text-secondary-dark transition-transform ${
                   sourcesOpen ? 'rotate-90' : ''
                 }`}
               >
@@ -143,24 +135,24 @@ export default function PlanResultCard({ plan, studentName }) {
             </button>
 
             {sourcesOpen && (
-              <div className="px-4 pb-4 pt-1 bg-slate-950/40 border-t border-white/10">
-                <ul className="space-y-2 text-sm text-slate-200">
+              <div className="px-4 pb-4 pt-1 bg-surface-light dark:bg-surface-dark/60 border-t border-border dark:border-white/10 transition-colors">
+                <ul className="space-y-2 text-sm text-text-primary-light dark:text-text-primary-dark">
                   {sources.map((src, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-slate-500" />
+                      <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-text-secondary-light dark:bg-text-secondary-dark" />
                       <div>
                         <a
                           href={src.url || '#'}
                           target="_blank"
                           rel="noreferrer"
-                          className={`hover:text-indigo-300 ${
-                            src.url ? 'underline decoration-slate-500/70' : ''
+                          className={`hover:text-primary-600 dark:hover:text-primary-300 ${
+                            src.url ? 'underline decoration-text-secondary-light/70 dark:decoration-text-secondary-dark/70' : ''
                           }`}
                         >
                           {src.title || 'Untitled source'}
                         </a>
                         {src.source && (
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">
                             {src.source}
                           </p>
                         )}

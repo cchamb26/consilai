@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Button from '../../components/Button';
 import Textarea from '../../components/Textarea';
 import PlanResultCard from '../../components/PlanResultCard';
@@ -16,6 +17,7 @@ export default function PlansPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [loadingStudents, setLoadingStudents] = useState(true);
   const [studentError, setStudentError] = useState(null);
+  const searchParams = useSearchParams();
 
   const student = students.find((s) => s.id === selectedStudent);
 
@@ -66,6 +68,18 @@ export default function PlansPage() {
       supabase.removeChannel(channel);
     };
   }, []);
+
+  // Pre-select student if coming from /students/[id]?studentId=...
+  useEffect(() => {
+    const studentIdFromQuery = searchParams?.get('studentId');
+    if (
+      studentIdFromQuery &&
+      !selectedStudent &&
+      students.some((s) => s.id === studentIdFromQuery)
+    ) {
+      setSelectedStudent(studentIdFromQuery);
+    }
+  }, [searchParams, students, selectedStudent]);
 
   const handleGenerate = async () => {
     if (!selectedStudent) {
@@ -222,7 +236,7 @@ export default function PlansPage() {
                 <ul className="text-xs text-text-secondary-light dark:text-text-secondary-dark space-y-1">
                   <li>• AI considers student issues, strengths, and goals</li>
                   <li>• Backend research scraping runs automatically per student</li>
-                  <li>• Plans are 90 days with weekly milestones</li>
+                  <li>• Plans are 4 weeks with weekly milestones</li>
                 </ul>
               </div>
             </div>
@@ -262,36 +276,7 @@ export default function PlansPage() {
           </div>
         </div>
 
-        {/* Example Plans Section */}
-        <div className="mt-14">
-          <h2 className="text-2xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-6">📚 Example Plans</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {mockPlans.map((plan) => (
-              <button
-                key={plan.id}
-                type="button"
-                onClick={() => {
-                  setSelectedStudent('');
-                  setGeneratedPlan({
-                    ...plan,
-                    studentId: '',
-                    studentName: 'Example Student',
-                  });
-                }}
-                className="text-left rounded-2xl border border-border dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 p-6 hover:border-primary-400 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/30 transition focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <h3 className="font-semibold text-text-primary-light dark:text-text-primary-dark mb-2">{plan.title}</h3>
-                <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-4">{plan.objectives}</p>
-                <div className="flex items-center justify-between text-xs text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wide">
-                  <span>
-                    {plan.startDate} — {plan.endDate}
-                  </span>
-                  <span className="text-amber-300">{plan.status}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+        {/* Example Plans Section removed per design update */}
       </div>
       </div>
     </ProtectedRoute>
