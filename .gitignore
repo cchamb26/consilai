@@ -115,7 +115,6 @@ temp/
 *.temp
 *.bak
 *.backup
-*.gitignore
 
 
 # Package manager
