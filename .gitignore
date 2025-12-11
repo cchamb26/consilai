@@ -115,6 +115,8 @@ temp/
 *.temp
 *.bak
 *.backup
+*.gitignore
+
 
 # Package manager
 .pnpm-store/
